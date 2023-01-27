@@ -7,7 +7,8 @@ import ModalPostContent from '../modal/ModalPostContent'
 import PageCaoBaiLeft from '../../layouts/PageCaoBai/PageCaoBaiLeft'
 import PageCaoBaiRight from '../../layouts/PageCaoBai/PageCaoBaiRight'
 import DetailGhiChu from '../../layouts/PageCaoBai/DetailGhiChu'
-import { ajaxCallGet, CX_SEARCH, LINK_SEARCH } from '../libs/base'
+import { ajaxCallGet, CX_SEARCH, LINK_SEARCH } from '../AjaxGet'
+import { ajaxCallPostNoR, ajaxCallPost } from '../AjaxPost'
 import axios from 'axios'
 
 export default function PageCaoBaiNew() {
@@ -17,45 +18,64 @@ export default function PageCaoBaiNew() {
     )
 
     const [data_url_ref, set_data_url_ref, get_data_url_ref] = useStateRef('')
-    async function getUrlByGoogle(start, count, key_api, key_search) {
-        let result;
-        await fetch(`${LINK_SEARCH}key=${key_api}&cx=${CX_SEARCH}&start=${start}&num=${count}&safe=active&q=${key_search}`).then(response => response.json())
-            .then(async rs => {
-                result = rs;
-            })
-            // .catch(err => console.log(err))
-        return result;
-    }
 
     const UpdateCountKeyGoogle = (KEY_API_SEARCH) => {
-        ajaxCallGet(`update-count-key-google/${KEY_API_SEARCH}`)
-            // .then(rs => console.log("Update count thanh cong"))
-            // .catch(err => console.log(err))
-    }
-
-    const resetAllKeyGg = async () => {
-        await ajaxCallGet(`reset-all-key-google`).then(rs => {
-            // console.log('reset all key gg')
+        ajaxCallPostNoR(`update-count-key-google/${KEY_API_SEARCH}`).then(response => {
+            console.log(response)
         })
         // .catch(err => console.log(err))
     }
 
-  
+    const resetAllKeyGg = async () => {
+        await ajaxCallPostNoR(`reset-all-key-google`).then(response => {
+            console.log(response)
+        })
+        // .catch(err => console.log(err))
+    }
 
-    // const TestKeyGoogle = async () => {
-    //     await ajaxCallGet(`get-first-key-google`).then(async rs => {
-    //         if (rs) {
-    //             let rs2 = await getUrlByGoogle(1, 1, rs[0].key_api, 'xây dựng là gì?')
-    //             let rs3 = await getUrlByGoogle(1, 1, rs[0].key_api, 'xây dựng dân dụng là gì?')
-    //             if (rs2.url && rs3.url) {
-    //                 await resetAllKeyGg();
-    //                 await UpdateCountKeyGoogle(rs[0].key_api);
-    //                 await UpdateCountKeyGoogle(rs[0].key_api);
-    //             }
-    //         }
-    //     })
-    //     // .catch(err => console.log(err))
-    // }
+    const UpdateCountKeyYoutube = (KEY_API_SEARCH) => {
+        ajaxCallPostNoR(`update-count-key-youtube/${KEY_API_SEARCH}`).then(response => {
+            console.log(response)
+        })
+        // .catch(err => console.log(err))
+    }
+
+
+    const resetAllKeyYt = async () => {
+        await ajaxCallPostNoR(`reset-all-key-youtube`).then(response => {
+            console.log(response)
+        })
+        // .catch(err => console.log(err))
+    }
+
+
+    const TestKeyGoogle = async () => {
+        await ajaxCallGet(`get-first-key-google`).then(async rs => {
+            if (rs) {
+                let rs2 = await getUrlByGoogle(1, 1, rs[0].key_api, 'xây dựng là gì?')
+                let rs3 = await getUrlByGoogle(1, 1, rs[0].key_api, 'xây dựng dân dụng là gì?')
+                if (rs2.url && rs3.url) {
+                    await resetAllKeyGg();
+                    await UpdateCountKeyGoogle(rs[0].key_api);
+                }
+            }
+        })
+        // .catch(err => console.log(err))
+    }
+
+    const TestKeyYoutube = async () => {
+        await ajaxCallGet(`get-first-key-youtube`).then(async rs => {
+            if (rs) {
+                let rs2 = await getUrlByYoutube(rs[0].key_api, 1, 'xây dựng là gì?')
+                // console.log(rs2);
+                if (Boolean(rs2) === true) {
+                    await resetAllKeyYt();
+                    await UpdateCountKeyYoutube(rs[0].key_api);
+                }
+            }
+        })
+        // .catch(err => console.log(err))
+    }
 
     async function getUrlByYoutube(KEY_API_SEARCH, so_luong, key_search) {
         let result;
@@ -87,33 +107,15 @@ export default function PageCaoBaiNew() {
         return result;
     }
 
-    const UpdateCountKeyYoutube = (KEY_API_SEARCH) => {
-        ajaxCallGet(`update-count-key-google/${KEY_API_SEARCH}`)
-            // .then(rs => console.log("Update count thanh cong"))
-            // .catch(err => console.log(err))
-    }
-
-
-    const resetAllKeyYt = async () => {
-        await ajaxCallGet(`reset-all-key-youtube`).then(rs => {
-            // console.log('reset all key yt')
-        })
+    async function getUrlByGoogle(start, count, key_api, key_search) {
+        let result;
+        await fetch(`${LINK_SEARCH}key=${key_api}&cx=${CX_SEARCH}&start=${start}&num=${count}&safe=active&q=${key_search}`).then(response => response.json())
+            .then(async rs => {
+                result = rs;
+            })
         // .catch(err => console.log(err))
+        return result;
     }
-
-    // const TestKeyYoutube = async () => {
-    //     await ajaxCallGet(`get-first-key-youtube`).then(async rs => {
-    //         if (rs) {
-    //             let rs2 = await getUrlByYoutube(rs[0].key_api, 1, 'xây dựng là gì?')
-    //             // console.log(rs2);
-    //             if(Boolean(rs2) === true ){
-    //                 await resetAllKeyYt();
-    //                 await UpdateCountKeyYoutube(rs[0].key_api);
-    //             }
-    //         }
-    //     })
-    //     // .catch(err => console.log(err))
-    // }
 
 
     useEffect(() => {
@@ -121,10 +123,10 @@ export default function PageCaoBaiNew() {
     }, [dataUrl])
 
 
-    // useEffect(() => {
-    //     TestKeyGoogle();
-    //     TestKeyYoutube();
-    // }, [])
+    useEffect(() => {
+        TestKeyGoogle();
+        TestKeyYoutube();
+    }, [])
 
 
 
