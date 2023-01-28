@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { ajaxCallPost } from '../AjaxPost';
+import { SaveKeyYoutube } from '../AjaxPost/KeyYoutube';
 import { Const_Libs } from '../Toast';
 
 const ModalAddKeyYoutube = (props) => {
@@ -13,7 +13,7 @@ const ModalAddKeyYoutube = (props) => {
             key_api: keyYoutube,
             description: description
         }]
-        ajaxCallPost(`save-key-youtube`, data).then(response => {
+        SaveKeyYoutube(data).then(response => {
             if (response.success === true) {
                 Const_Libs.TOAST.success(response.message)
             }

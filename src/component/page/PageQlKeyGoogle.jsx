@@ -1,27 +1,33 @@
-import React from 'react'
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
+
 import { useDispatch, useSelector } from 'react-redux'
-import DanhSachKeyGg from '../../layouts/PageKeyGoogle/DanhSachKeyGg'
-import TestKeyGg from '../../layouts/PageKeyGoogle/TestKeyGg'
-import ThemKeyGgExcel from '../../layouts/PageKeyGoogle/ThemKeyGgExcel'
-import XoaKeyGg from '../../layouts/PageKeyGoogle/XoaKeyGg'
-import { ajaxCallGet } from '../AjaxGet'
-import ModalAddKeyGoogle from '../modal/ModalAddKeyGoogle'
+
+import { getAllKeyGg } from '../AjaxGet'
+
 import { changeDataKeyGoogle } from '../reducer_action/BaseReducerAction'
+
+import ModalAddKeyGoogle from '../modal/ModalAddKeyGoogle'
+
+import DanhSachKeyGg from '../../layouts/PageKeyGoogle/DanhSachKeyGg'
+
+import TestKeyGg from '../../layouts/PageKeyGoogle/TestKeyGg'
+
+import ThemKeyGgExcel from '../../layouts/PageKeyGoogle/ThemKeyGgExcel'
+
+import XoaKeyGg from '../../layouts/PageKeyGoogle/XoaKeyGg'
 
 const PageQlKeyGoogle = () => {
     const dispatch = useDispatch();
 
     const handleGetAllKeyGg = () => {
-        ajaxCallGet(`get-all-key-google`).then(rs => {
-            dispatch(changeDataKeyGoogle([...rs]))
+        getAllKeyGg().then(arr => {
+            dispatch(changeDataKeyGoogle([...arr]))
         })
-        // .catch(err => console.log(err))
     }
 
     useEffect(() => {
         handleGetAllKeyGg();
-    },[])
+    }, [])
 
     return (
         <div style={{ height: '77vh', width: '900px', margin: 'auto', border: '1px solid #ccc', borderRadius: '5px', padding: '8px' }}>
@@ -44,7 +50,7 @@ const PageQlKeyGoogle = () => {
                             <ModalAddKeyGoogle handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
                         <div className='col-4 delete'>
-                            <TestKeyGg handleGetAllKeyGg={handleGetAllKeyGg}/>
+                            <TestKeyGg handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
                         <div className='col-4 delete'>
                             <XoaKeyGg handleGetAllKeyGg={handleGetAllKeyGg} />
@@ -61,7 +67,7 @@ const PageQlKeyGoogle = () => {
                 </div>
             </div>
         </div>
-        
+
     )
 }
 

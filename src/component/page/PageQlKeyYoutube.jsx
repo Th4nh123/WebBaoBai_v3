@@ -1,20 +1,27 @@
 import React, { useState, useEffect } from 'react';
 
 import { useDispatch } from 'react-redux'
-import DanhSachKeyYt from '../../layouts/PageKeyYoutube/DanhSachKeyYt'
-import TestKeyYoutube from '../../layouts/PageKeyYoutube/TestKeyYoutube'
-import ThemKeyYtExcel from '../../layouts/PageKeyYoutube/ThemKeyYtExcel'
-import XoaKeyYt from '../../layouts/PageKeyYoutube/XoaKeyYt'
-import { ajaxCallGet } from '../AjaxGet'
-import ModalAddKeyYoutube from '../modal/ModalAddKeyYoutube'
+
+import { getAllKeyYt } from '../AjaxGet'
+
 import { changeDataKeyYoutube } from '../reducer_action/BaseReducerAction'
+
+import ModalAddKeyYoutube from '../modal/ModalAddKeyYoutube'
+
+import DanhSachKeyYt from '../../layouts/PageKeyYoutube/DanhSachKeyYt'
+
+import TestKeyYoutube from '../../layouts/PageKeyYoutube/TestKeyYoutube'
+
+import ThemKeyYtExcel from '../../layouts/PageKeyYoutube/ThemKeyYtExcel'
+
+import XoaKeyYt from '../../layouts/PageKeyYoutube/XoaKeyYt'
 
 const PageQlKeyYoutube = () => {
     const dispatch = useDispatch();
 
     const handleGetAllKeyYt = () => {
-        ajaxCallGet(`get-all-key-youtube`).then(rs => {
-            dispatch(changeDataKeyYoutube([...rs]))
+        getAllKeyYt().then(arr => {
+            dispatch(changeDataKeyYoutube([...arr]))
         })
     }
 

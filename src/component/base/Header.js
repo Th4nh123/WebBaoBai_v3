@@ -64,11 +64,6 @@ export default function Header() {
         id='tabs'
         role='tablist'
       >
-        {/* <li className='nav-item'>
-          <a href='#' className='logo-header'>
-            <img src='' alt='logo' />
-          </a>
-          </li> */}
 
         {header}
 
@@ -78,11 +73,7 @@ export default function Header() {
           <label className='col-4 text-start fs-7 fw-bolder'>
             Tên chiến dịch:{' '}
           </label>
-          {/* <input
-              type='text'
-              className='col-8'
-              placeholder='Cào bài cho RDONE'
-            /> */}
+
           <ChonChienDich />
 
         </div>

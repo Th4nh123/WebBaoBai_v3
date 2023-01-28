@@ -2,7 +2,7 @@ import React from 'react'
 import $ from 'jquery'
 import { useSelector } from 'react-redux'
 
-import { ajaxCallPost, ajaxCallPostNoR } from '../../component/AjaxPost'
+import { deleteKey, deleteAllKey } from '../../component/AjaxPost/Key'
 import { Const_Libs } from '../../component/Toast'
 
 const XoaKey = (props) => {
@@ -23,7 +23,7 @@ const XoaKey = (props) => {
       }
     }
 
-    await ajaxCallPost('delete-key', arr).then(response => {
+    await deleteKey(arr).then(response => {
       $('#checkbox-all-key').prop('checked', false)
       $('input[name="checkbox-key"]').prop('checked', false)
       handleGetKeyByIdCam();
@@ -37,7 +37,7 @@ const XoaKey = (props) => {
   }
 
   const deleteAllKeyByCheckBox = async () => {
-    ajaxCallPostNoR(`delete-all-key/${data_current_id_cam}`).then(response => {
+    deleteAllKey(data_current_id_cam).then(response => {
       $('#check-all-key').prop('checked', false);
 
       $('.btn-delete-all-key').addClass('d-none');

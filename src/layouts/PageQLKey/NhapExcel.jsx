@@ -1,19 +1,17 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ExcelRenderer } from 'react-excel-renderer'
 
-import { ajaxCallGet } from '../../component/AjaxGet'
-import { ajaxCallPost } from '../../component/AjaxPost'
+import { SaveKeyByIdCam } from '../../component/AjaxPost/Key'
 
 import { Const_Libs } from '../../component/Toast'
-import { changeDataKey } from '../../component/reducer_action/BaseReducerAction'
 
 const NhapExcel = (props) => {
 
   const { handleGetKeyByIdCam } = props;
 
   const [isUploading, setUploading] = useState(false);
-  
+
   const data_current_id_cam = useSelector(state => state.base.current_id_cam)
 
   //https://www.youtube.com/watch?v=41GviT3Pepk&list=PLBcGPKNwWSiJpYdz3JQZ4vOMz00jSt5il
@@ -81,7 +79,7 @@ const NhapExcel = (props) => {
         })
         // console.log(arr)
         if (data_current_id_cam) {
-          ajaxCallPost(`save-key-by-id-cam/${data_current_id_cam}`, arr).then(response => {
+          SaveKeyByIdCam(data_current_id_cam, arr).then(response => {
             if (response.success === true) {
               Const_Libs.TOAST.success(response.message)
             }
@@ -90,6 +88,9 @@ const NhapExcel = (props) => {
             }
             handleGetKeyByIdCam(data_current_id_cam)
           })
+        }
+        else{
+          
         }
       }
     })

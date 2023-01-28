@@ -1,6 +1,6 @@
 import React from 'react'
 import $ from 'jquery'
-import { ajaxCallPost, ajaxCallPostNoR } from '../../component/AjaxPost';
+import { deleteKeyYt,deleteAllKeyYt  } from '../../component/AjaxPost/KeyYoutube';
 import { Const_Libs } from '../../component/Toast';
 
 const XoaKeyYt = (props) => {
@@ -13,7 +13,7 @@ const XoaKeyYt = (props) => {
       }
     }
 
-    await ajaxCallPost(`delete-key-youtube`, arr).then(response => {
+    await deleteKeyYt().then(response => {
       $('#checkbox-all-key-yt').prop('checked', false)
       $('input[name="checkbox-key-youtube"]').prop('checked', false)
       handleGetAllKeyYt();
@@ -26,8 +26,8 @@ const XoaKeyYt = (props) => {
     })
   }
 
-  const deleteAllKeyYtByCheckBox = () => {
-    ajaxCallPostNoR(`delete-all-key-youtube`).then(response => {
+  const deleteAllKeyYtByCheckBox = async () => {
+    await deleteAllKeyYt().then(response => {
       $('#check-all-key-yt').prop('checked', false);
       $('input[name="checkbox-key-google"]').prop('checked', false)
       $('.btn-delete-key-yt').removeClass('d-none')

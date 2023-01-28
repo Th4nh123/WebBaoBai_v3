@@ -27,7 +27,6 @@ export default function Footer() {
   ] = useStateRef(null)
 
   const [keyDaCao, setKeyDaCao] = useState(0)
-/*
   const handleGetLenght = () => {
     ajaxCallGet('get-key').then(rs => {
       let keyCao = rs.filter(item => {
@@ -52,7 +51,6 @@ export default function Footer() {
     set_current_key_ref(key[0])
     handleGetLenght();
   }, [idKey, data_current_id_cam])
-*/
 
   return (
     <section

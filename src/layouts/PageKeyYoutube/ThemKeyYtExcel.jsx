@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import { OutTable, ExcelRenderer } from 'react-excel-renderer'
+import { ExcelRenderer } from 'react-excel-renderer'
 import { Const_Libs } from '../../component/Toast'
-import { ajaxCallPost } from '../../component/AjaxPost'
+import { SaveKeyYoutube } from '../../component/AjaxPost/KeyYoutube'
 
 
 const ThemKeyYtExcel = (props) => {
-    const {handleGetAllKeyYt} = props;
+    const { handleGetAllKeyYt } = props;
     const [isUploading, setUploading] = useState(false);
 
     const fileYtHandler = event => {
@@ -24,10 +24,10 @@ const ThemKeyYtExcel = (props) => {
                 await resp.rows.map(item => {
                     arr.push({
                         key_api: item[0]?.trim(),
-                        description: item[1]? item[1].trim() : ''
+                        description: item[1] ? item[1].trim() : ''
                     })
                 })
-                await ajaxCallPost(`save-key-youtube`, arr).then(response => {
+                await SaveKeyYoutube(arr).then(response => {
                     handleGetAllKeyYt()
                     if (response.success === true) {
                         Const_Libs.TOAST.success(response.message)

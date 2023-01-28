@@ -18,9 +18,9 @@ export async function ajaxCallPost(url, dataJson) {
       console.log(true_response);
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      // console.log(errorThrown);
-      // console.log(textStatus);
-      // console.log(jqXHR);
+      console.log(errorThrown);
+      console.log(textStatus);
+      console.log(jqXHR);
     },
   });
   return true_response;
@@ -37,9 +37,9 @@ export async function ajaxCallPostNoR(url) {
       true_response = response
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      // console.log(errorThrown);
-      // console.log(textStatus);
-      // console.log(jqXHR);
+      console.log(errorThrown);
+      console.log(textStatus);
+      console.log(jqXHR);
     },
   });
   return true_response

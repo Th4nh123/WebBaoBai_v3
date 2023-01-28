@@ -1,56 +1,28 @@
 import React from 'react'
-import $ from 'jquery'
+import $ from "jquery";
 import { useSelector } from 'react-redux';
-import { ajaxCallGet, CX_SEARCH, LINK_SEARCH } from '../../component/AjaxGet'
-
+import { getUrlByGoogle } from "../../component/AjaxGet";
+import { UpdateCountKeyGoogle } from "../../component/AjaxPost/KeyGoogle";
 const TestKeyGg = (props) => {
 
     const { handleGetAllKeyGg } = props
     const data_key_google = useSelector(state => state.base.data_key_google)
 
-    const UpdateCountKeyGoogle = async (key) => {
-
-        await ajaxCallGet(`update-count-key-google/${key}`).then(response => {
-            console.log(response.message);
-        })
-        // .catch(err => console.log(err))
-    }
-
-    async function getUrlByGoogle(start, count, key_api, key_search, id_key) {
-        $.ajax({
-            headers: {
-            },
-            type: 'GET',
-            contentType: 'application/json',
-            url: `${LINK_SEARCH}key=${key_api}&cx=${CX_SEARCH}&start=${start}&num=${count}&safe=active&q=${key_search}`,
-            success: function (response, status, jqXHR) {
-                // status : success
-                // jqXHR.status : 200
-                if (jqXHR.status === 200) {
-                    UpdateCountKeyGoogle(id_key);
-                    $(`.google-item-${id_key}`).css("background-color", "green");
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                // textStatus : error
-                // jqXHR.status : 0
-                if (jqXHR.status === 400 || jqXHR.status === 403) {
-                    $(`.google-item-${id_key}`).css("background-color", "red");
-                } else if (jqXHR.status === 429) {
-                    $(`.google-item-${id_key}`).css("background-color", "orange");
-                }
-                console.log(jqXHR);
-                console.log(textStatus);
-                console.log(errorThrown);
-            }
-        })
-        return 11;
-    }
-
     const handleTestKeyGoogle = async () => {
         if (data_key_google.length > 0) {
-            data_key_google.map(item => {
-                getUrlByGoogle(1, 1, item.key_api, 'xây dựng là gì?', item._id)
+            data_key_google.map(async item => {
+                await getUrlByGoogle(1, 1, item.key_api, 'xây dựng là gì?').then(async (response) => {
+                    if (response.status === 200) {
+                        $(`.google-item-${item._id}`).css("background-color", "green");
+                    } else if (response.status === 429) {
+                        $(`.google-item-${item._id}`).css("background-color", "orange");
+                    }
+                    else {
+                        $(`.google-item-${item._id}`).css("background-color", "red");
+                    }
+                    await UpdateCountKeyGoogle(item._id);
+                    await handleGetAllKeyGg();
+                })
             })
         }
         // handleGetAllKeyGg()

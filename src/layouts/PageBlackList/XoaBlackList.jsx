@@ -4,7 +4,7 @@ import $ from 'jquery'
 
 import { useSelector } from 'react-redux';
 
-import { ajaxCallPost, ajaxCallPostNoR } from '../../component/AjaxPost';
+import { DeleteBlackKey, DeleteAllBlackKey } from '../../component/AjaxPost/BlackList';
 
 import { Const_Libs } from '../../component/Toast';
 
@@ -25,22 +25,21 @@ const XoaBlackList = (props) => {
       }
     }
 
-    await ajaxCallPost('delete-black-list', arr).then(response => {
-      $('#checkbox-all-black').prop('checked', false)
-      $('input[name="checkbox-black-key"]').prop('checked', false)
-      handleGetBlackListByIdCam();
+    await DeleteBlackKey(arr).then(response => {
       if (response.success === true) {
         Const_Libs.TOAST.success(response.message)
       }
       else {
         Const_Libs.TOAST.error(response.message)
       }
+      handleGetBlackListByIdCam(current_id_cam);
+      $('#checkbox-all-black').prop('checked', false)
+      $('input[name="checkbox-black-key"]').prop('checked', false)
     })
-    // .catch(err => console.log(err))
   }
 
   const deleteAllBlackKeyByCheckBox = () => {
-    ajaxCallPostNoR(`delete-all-black-list/${current_id_cam}`).then(response => {
+    DeleteAllBlackKey(current_id_cam).then(response => {
       $('#checkbox-all-black').prop('checked', false);
       $('input[name="checkbox-black-key"]').prop('checked', false)
       $('.btn-delete-all-bl').addClass('d-none')
@@ -75,7 +74,6 @@ const XoaBlackList = (props) => {
       >
         Xóa hết
       </button>
-
     </>
   )
 }

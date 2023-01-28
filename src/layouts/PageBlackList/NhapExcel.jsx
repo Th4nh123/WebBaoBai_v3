@@ -1,29 +1,22 @@
 import React, { useState } from 'react';
+
 import { ExcelRenderer } from 'react-excel-renderer';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { ajaxCallGet } from '../../component/AjaxGet';
-import { ajaxCallPost } from '../../component/AjaxPost';
+import { useSelector } from 'react-redux';
+
+import { SaveBlackListByIdCam } from '../../component/AjaxPost/BlackList';
+
 import { Const_Libs } from '../../component/Toast';
-import { changeDataBlackList } from '../../component/reducer_action/BaseReducerAction';
 
+const NhapExcel = (props) => {
+  const { handleGetBlackListByIdCam } = props
 
-
-const NhapExcel = () => {
-  const dispatch = useDispatch();
   const current_id_cam = useSelector(state => state.base.current_id_cam)
 
   const [isUploading, setUploading] = useState(false);
 
-
-  const handleGetBlackListByIdCam = () => {
-    ajaxCallGet(`get-black-list-by-id-cam/${current_id_cam}`).then(rs => {
-      dispatch(changeDataBlackList([...rs]))
-    }).catch(err => console.log(err))
-  }
-
   const fileHandler = event => {
-    
+
     let fileObj = event.target.files[0]
     setUploading(true);
 
@@ -41,14 +34,14 @@ const NhapExcel = () => {
           })
         })
         if (current_id_cam) {
-          ajaxCallPost(`save-black-list-by-id-cam/${current_id_cam}`, arr).then(response => {
-            handleGetBlackListByIdCam();
+          SaveBlackListByIdCam(current_id_cam, arr).then(response => {
             if (response.success === true) {
               Const_Libs.TOAST.success(response.message)
             }
             else {
               Const_Libs.TOAST.error(response.message)
             }
+            handleGetBlackListByIdCam();
           })
         } else {
           Const_Libs.TOAST.error('Vui lòng chọn chiến dịch trước khi import.')

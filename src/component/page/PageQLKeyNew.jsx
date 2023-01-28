@@ -6,16 +6,16 @@ import NhapExcel from '../../layouts/PageQLKey/NhapExcel'
 import XoaKey from '../../layouts/PageQLKey/XoaKey'
 import DanhSachKey from '../../layouts/PageQLKey/DanhSachKey'
 import { changeDataKey } from '../../component/reducer_action/BaseReducerAction'
-import { ajaxCallGet } from '../../component/AjaxGet'
+import { getKey,getKeyByIdCam } from '../AjaxGet'
 
 export default function PageQLKeyNew() {
     const dispatch = useDispatch()
 
     const data_current_id_cam = useSelector(state => state.base.current_id_cam);
 
-    const handleGetKeyByIdCam = () => {
-        ajaxCallGet('get-key-by-id-cam/' + data_current_id_cam).then(rs => {
-            dispatch(changeDataKey([...rs]))
+    const handleGetKeyByIdCam = (id_cam) => {
+        getKeyByIdCam(id_cam).then(arr => {
+            dispatch(changeDataKey([...arr]))
         })
     }
 

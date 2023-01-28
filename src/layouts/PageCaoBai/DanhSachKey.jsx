@@ -3,7 +3,7 @@ import $ from 'jquery'
 import { useDispatch, useSelector } from 'react-redux'
 import useStateRef from 'react-usestateref'
 
-import { ajaxCallGet, CX_SEARCH, LINK_SEARCH } from '../../component/AjaxGet'
+import { getUrlByIdKey, getDataIdHaveGoogle, getDataIdHaveVideo ,getIdKey} from '../../component/AjaxGet'
 import { changeCheckKey, changeCurrentIdKey, changeDataKeyHaveGoogle, changeDataKeyHaveVideo, changeDataUrl } from '../../component/reducer_action/BaseReducerAction'
 import SearchKey from './SearchKey'
 
@@ -43,7 +43,7 @@ const DanhSachKey = () => {
         $('.ky-hieu').html(key[0].ky_hieu)
         // set_current_id_key(id_key)
         dispatch(changeCurrentIdKey(id_key))
-        return await ajaxCallGet('get-url-by-id-key/' + id_key).then(rs => {
+        return await getUrlByIdKey(id_key).then(rs => {
             for (let i = 0; i < rs.length; i++) {
                 rs[i].state = 'create'
             }
@@ -69,7 +69,7 @@ const DanhSachKey = () => {
 
     const getDataIdHaveVideo = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-video/${id_cam}`).then(async rs => {
+        await getDataIdHaveVideo(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -86,7 +86,7 @@ const DanhSachKey = () => {
 
     const getDataIdHaveUrlGoogle = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-url-google/${id_cam}`).then(async rs => {
+        await getDataIdHaveGoogle(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -166,7 +166,7 @@ const DanhSachKey = () => {
 
     const getIdKey = async () => {
         let arr = [];
-        await ajaxCallGet(`get-id-key/${current_id_cam}`).then(async rs => {
+        await getIdKey(current_id_cam).then(async rs => {
             await rs.map(item => {
                 arr.push(item.id)
             })

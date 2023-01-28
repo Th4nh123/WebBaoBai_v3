@@ -2,7 +2,7 @@ import React from 'react'
 
 import $ from 'jquery'
 
-import { ajaxCallPost, ajaxCallPostNoR } from '../../component/AjaxPost';
+import { DeleteCam, DeleteAllCam } from '../../component/AjaxPost/ChienDich';
 
 import { Const_Libs } from '../../component/Toast';
 
@@ -19,7 +19,7 @@ const XoaChienDich = (props) => {
         arr.push({ id_cam: checkbox.getAttribute('data-id-cam') })
       }
     }
-    await ajaxCallPost('delete-campaign', arr).then(response => {
+    await DeleteCam(arr).then(response => {
       $('#checkAllCam').prop('checked', false)
       $('input[name="checkbox-cam"]').prop('checked', false)
       handleGetCampaign();
@@ -30,12 +30,11 @@ const XoaChienDich = (props) => {
         Const_Libs.TOAST.error(response.message)
       }
     })
-      .catch(err => console.log(err))
     arr = [];
   }
 
   const deleteAllCamByCheckBox = () => {
-    ajaxCallPostNoR('delete-all-campaign').then(response => {
+    DeleteAllCam().then(response => {
       $('#check-all-cam').prop('checked', false)
       $('input[name="checkbox-cam"]').prop('checked', false)
       $('.btn-delete-all-cam').addClass('d-none')
@@ -48,7 +47,6 @@ const XoaChienDich = (props) => {
         Const_Libs.TOAST.error(response.message)
       }
     })
-    // .catch(err => console.log(err))
   }
 
   return (

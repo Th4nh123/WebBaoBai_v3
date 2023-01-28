@@ -2,9 +2,9 @@ import React from 'react'
 
 import routes from '../../route'
 
-export default function Body(){
+export default function Body() {
 
-  const body = routes.map((value,index) => {
+  const body = routes.map((value, index) => {
     if (index == 0) {
       return (
         <div
@@ -18,7 +18,7 @@ export default function Body(){
         </div>
       );
     }
-    else{
+    else {
       return (
         <div
           key={index}

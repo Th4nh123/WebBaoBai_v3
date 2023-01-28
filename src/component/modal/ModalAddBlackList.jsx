@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { ajaxCallPost } from '../AjaxPost';
+import { SaveBlackListByIdCam } from '../AjaxPost/BlackList';
 import { Const_Libs } from '../Toast';
 
 const ModalAddBlackList = (props) => {
@@ -19,16 +19,15 @@ const ModalAddBlackList = (props) => {
             domain: blackKey.domain,
             loai: blackKey.loai
         }]
-
-        ajaxCallPost(`save-black-list-by-id-cam/${current_id_cam}`, arr).then(response => {
-            handleGetBlackListByIdCam()
-            resetData()
+        SaveBlackListByIdCam(current_id_cam, arr).then(response => {
             if (response.success === true) {
                 Const_Libs.TOAST.success(response.message)
             }
             else {
                 Const_Libs.TOAST.error(response.message)
             }
+            handleGetBlackListByIdCam(current_id_cam)
+            resetData()
         })
     }
 

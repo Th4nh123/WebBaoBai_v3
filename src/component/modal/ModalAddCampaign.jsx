@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { ajaxCallPost } from "../AjaxPost";
-import Select from 'react-select'
+import { SaveCam } from "../AjaxPost/ChienDich";
+import Select from 'react-select';
 import { Const_Libs } from '../Toast';
 
 const ModalAddChienDich = (props) => {
@@ -37,7 +37,7 @@ const ModalAddChienDich = (props) => {
 
         return (
             <Select className="col-12 o-languages"
-                value={chienDich.lang ? { value: chienDich.lang, label: chienDich.lang ,} : { value: "Chọn ngôn ngữ", label: "Chọn ngôn ngữ" }}
+                value={chienDich.lang ? { value: chienDich.lang, label: chienDich.lang, } : { value: "Chọn ngôn ngữ", label: "Chọn ngôn ngữ" }}
                 onChange={handleChangeOption()}
                 options={options} />
         )
@@ -48,13 +48,13 @@ const ModalAddChienDich = (props) => {
             campaign: chienDich.ten,
             language: chienDich.lang
         }]
-        ajaxCallPost(`save-cam`, arr).then(function(response) {
+        SaveCam(arr).then(function (response) {
             resetData();
             handleGetCampaign();
             if (response.success == true) {
-                Const_Libs.TOAST.success(response.message)   
+                Const_Libs.TOAST.success(response.message)
             }
-            else{
+            else {
                 Const_Libs.TOAST.error(response.message)
             }
         });

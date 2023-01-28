@@ -1,6 +1,6 @@
 import React from 'react'
 import $ from 'jquery'
-import { ajaxCallPost, ajaxCallPostNoR } from '../../component/AjaxPost';
+import { deleteKeyGg,deleteAllKeyGg } from '../../component/AjaxPost/KeyGoogle';
 import { Const_Libs } from '../../component/Toast';
 
 const XoaKeyGg = (props) => {
@@ -14,7 +14,7 @@ const XoaKeyGg = (props) => {
         arr.push({ id_key_gg: checkbox.getAttribute('data-id-key-google') })
       }
     }
-    await ajaxCallPost('delete-key-google', arr).then(response => {
+    await deleteKeyGg(arr).then(response => {
       $('#checkbox-all-key-gg').prop('checked', false)
       $('input[name="checkbox-key-google"]').prop('checked', false)
       handleGetAllKeyGg();
@@ -29,7 +29,7 @@ const XoaKeyGg = (props) => {
   }
 
   const deleteAllKeyGgByCheckBox = () => {
-    ajaxCallPostNoR(`delete-all-key-google`).then(response => {
+    deleteAllKeyGg().then(response => {
       $('#check-all-key-gg').prop('checked', false);
       $('input[name="checkbox-key-google"]').prop('checked', false)
       $('.btn-delete-key-gg').removeClass('d-none')

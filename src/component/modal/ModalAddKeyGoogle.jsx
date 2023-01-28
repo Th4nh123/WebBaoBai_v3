@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { ajaxCallPost } from '../AjaxPost';
+import { SaveKeyGoogle } from '../AjaxPost/KeyGoogle';
 import { Const_Libs } from '../Toast';
 
 const ModalAddKeyGoogle = (props) => {
@@ -16,7 +16,7 @@ const ModalAddKeyGoogle = (props) => {
             key_api: keyGoogle,
             description: description,
         }]
-        ajaxCallPost(`save-key-google`, data).then(response => {
+        SaveKeyGoogle(data).then(response => {
             console.log(response);
             handleGetAllKeyGg();
             setKeyGoogle('');
@@ -28,8 +28,6 @@ const ModalAddKeyGoogle = (props) => {
                 Const_Libs.TOAST.error(response.message)
             }
         })
-        // .catch(err => { Const_Libs.TOAST.error("Thêm thất bại"); })
-
     }
 
 

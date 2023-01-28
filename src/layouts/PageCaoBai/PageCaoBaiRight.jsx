@@ -3,7 +3,6 @@ import useStateRef from 'react-usestateref'
 import { useSelector } from 'react-redux'
 
 import CaoLai from './CaoLai'
-import LayUrl from './LayUrl'
 import XoaUrl from './XoaUrl'
 import XoaData from './XoaData'
 import DanhSachUrl from './DanhSachUrl'

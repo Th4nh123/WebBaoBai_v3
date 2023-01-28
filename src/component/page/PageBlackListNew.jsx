@@ -1,33 +1,35 @@
 import $ from 'jquery'
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { ajaxCallGet } from '../AjaxGet';
-import { changeDataBlackList } from '../reducer_action/BaseReducerAction';
-import NhapExcel from '../../layouts/PageBlackList/NhapExcel';
-import XoaBlackList from '../../layouts/PageBlackList/XoaBlackList';
-import DanhSachBlackList from '../../layouts/PageBlackList/DanhSachBlackList';
-import ModalAddBlackList from '../modal/ModalAddBlackList';
 
+import React, { useEffect } from 'react'
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getBlackListByIdCam } from '../AjaxGet';
+
+import { changeDataBlackList } from '../reducer_action/BaseReducerAction';
+
+import NhapExcel from '../../layouts/PageBlackList/NhapExcel';
+
+import XoaBlackList from '../../layouts/PageBlackList/XoaBlackList';
+
+import DanhSachBlackList from '../../layouts/PageBlackList/DanhSachBlackList';
+
+import ModalAddBlackList from '../modal/ModalAddBlackList';
 
 export default function PageBlacklistDomain() {
   const dispatch = useDispatch()
 
   const current_id_cam = useSelector(state => state.base.current_id_cam)
 
-  const handleGetBlackListByIdCam = () => {
-    ajaxCallGet(`get-black-list-by-id-cam/${current_id_cam}`).then(rs => {
-      // let arr = [];
-      // rs.map(item => {
-      //   arr.push({ id: item._id, domain: item.domain, loai: item.loai})
-      // })
-      dispatch(changeDataBlackList([...rs]))
+  const handleGetBlackListByIdCam = (id_cam) => {
+    getBlackListByIdCam(id_cam).then( arr => {
+      dispatch(changeDataBlackList([...arr]))
     })
-    // .catch(err => console.log(err))
   }
 
   useEffect(() => {
     if (current_id_cam) {
-      handleGetBlackListByIdCam();
+      handleGetBlackListByIdCam(current_id_cam);
     } else {
       dispatch(changeDataBlackList([]))
     }

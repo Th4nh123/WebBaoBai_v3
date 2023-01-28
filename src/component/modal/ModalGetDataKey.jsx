@@ -2,7 +2,6 @@ import $ from 'jquery'
 import '../../css/style.css'
 import { Const_Libs } from "../libs/Const_Libs";
 import { useState } from "react";
-import axios, { AxiosRequestConfig } from 'axios';
 import { downloadFile, URL_GET_API } from '../libs/base';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';

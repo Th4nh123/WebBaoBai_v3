@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { OutTable, ExcelRenderer } from 'react-excel-renderer'
+import { ExcelRenderer } from 'react-excel-renderer'
 import { Const_Libs } from '../../component/Toast'
-import { ajaxCallPost } from '../../component/AjaxPost'
+import { SaveKeyGoogle } from '../../component/AjaxPost/KeyGoogle'
 
 
 const ThemKeyGgExcel = (props) => {
@@ -25,7 +25,7 @@ const ThemKeyGgExcel = (props) => {
                         description: item[1] ? item[1].trim() : ''
                     })
                 })
-                await ajaxCallPost(`save-key-google`, arr).then(response => {
+                await SaveKeyGoogle(arr).then(response => {
                     handleGetAllKeyGg()
                     if (response.success === true) {
                         Const_Libs.TOAST.success(response.message)
