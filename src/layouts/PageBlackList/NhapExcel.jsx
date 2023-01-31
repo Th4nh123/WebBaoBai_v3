@@ -20,7 +20,7 @@ const NhapExcel = (props) => {
     let fileObj = event.target.files[0]
     setUploading(true);
 
-    ExcelRenderer(fileObj, (err, resp) => {
+    ExcelRenderer(fileObj, async (err, resp) => {
       // resp.rows.splice(0, 3)
       // let data_key = [...resp.rows.filter(item => item.length !== 0)]
       if (err) {
@@ -33,6 +33,7 @@ const NhapExcel = (props) => {
             loai: item[1]
           })
         })
+        console.log(arr);
         if (current_id_cam) {
           SaveBlackListByIdCam(current_id_cam, arr).then(response => {
             if (response.success === true) {
@@ -41,7 +42,7 @@ const NhapExcel = (props) => {
             else {
               Const_Libs.TOAST.error(response.message)
             }
-            handleGetBlackListByIdCam();
+            handleGetBlackListByIdCam(current_id_cam);
           })
         } else {
           Const_Libs.TOAST.error('Vui lòng chọn chiến dịch trước khi import.')

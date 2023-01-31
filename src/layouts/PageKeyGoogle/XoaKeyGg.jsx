@@ -1,14 +1,27 @@
 import React from 'react'
+
 import $ from 'jquery'
+
+import { useSelector } from 'react-redux';
+
 import { deleteKeyGg,deleteAllKeyGg } from '../../component/AjaxPost/KeyGoogle';
+
 import { Const_Libs } from '../../component/Toast';
 
 const XoaKeyGg = (props) => {
-
   const { handleGetAllKeyGg } = props;
+
+  const data_key_google = useSelector(state => state.base.data_key_google)
 
   let arr = []
   const deleteKeyGgByCheckBox = async () => {
+    if (data_key_google.length > 0) {
+      if ($(`.google-item-${data_key_google[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+        Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+        return;
+      }
+    }
+    console.log();
     for (let checkbox of document.querySelectorAll('input[name="checkbox-key-google"]')) {
       if (checkbox.checked) {
         arr.push({ id_key_gg: checkbox.getAttribute('data-id-key-google') })
@@ -29,6 +42,12 @@ const XoaKeyGg = (props) => {
   }
 
   const deleteAllKeyGgByCheckBox = () => {
+    if (data_key_google.length > 0) {
+      if ($(`.google-item-${data_key_google[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+        Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+        return;
+      }
+    }
     deleteAllKeyGg().then(response => {
       $('#check-all-key-gg').prop('checked', false);
       $('input[name="checkbox-key-google"]').prop('checked', false)

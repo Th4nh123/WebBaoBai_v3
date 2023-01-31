@@ -55,7 +55,7 @@ const DanhSachKeyGg = () => {
           (dataKeyGoogle.map((item, index) => {
             let class_item = `google-item-${item._id}`;
             return (
-              <tr key={index} className={class_item}>
+              <tr key={index} className={`google-item ${class_item}`}>
                 <td style={{ maxHeight: '21px', width: '5%' }}>
                   <input
                     type='checkbox'

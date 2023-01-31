@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import $ from 'jquery'
 import { useSelector, useDispatch } from 'react-redux';
 
-import { URL_API_WEB } from '../../component/libs/base'
+import { URL_WEB } from '../../component/AjaxGet'
 import DetailPost from './DetailPost';
 
 const DanhSachUrl = () => {
@@ -101,9 +101,9 @@ const DanhSachUrl = () => {
                                         ) : (
                                             <a
                                                 target={'_blank'}
-                                                href={URL_API_WEB + item.post_name}
+                                                href={URL_WEB + item.post_name}
                                             >
-                                                {URL_API_WEB + item.post_name}
+                                                {URL_WEB + item.post_name}
                                             </a>
                                         )}{' '}
                                         <div

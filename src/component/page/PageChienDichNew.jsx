@@ -16,10 +16,15 @@ import React, { useEffect } from 'react';
 const PageChienDichNew = () => {
     const dispatch = useDispatch();
 
-    const handleGetCampaign = async () => {
+    const handleGetCampaign = () => {
         const select_all_key = { _id: -1, campaign: 'Tất cả key', language: 'Vietnamese', check: 0 }
         getCam().then(arr => {
-            dispatch(changeDataCam([...arr, select_all_key]))
+            if (arr.length === 0) {
+                dispatch(changeDataCam([]))
+            }
+            else{
+                dispatch(changeDataCam([...arr, select_all_key]))
+            }
         })
     }
 

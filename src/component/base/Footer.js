@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import useStateRef from 'react-usestateref'
 import { ajaxCallGet, URL_API_WEB } from '../libs/base'
-import { Const_Libs } from '../libs/Const_Libs'
+import { getKey } from '../AjaxGet'
 import ModalGetDataKey from '../modal/ModalGetDataKey'
 
 
@@ -20,15 +20,10 @@ export default function Footer() {
     set_current_key_ref,
     get_current_key_ref
   ] = useStateRef(null)
-  const [
-    check_url_ref,
-    set_check_url_ref,
-    get_check_url_ref
-  ] = useStateRef(null)
 
   const [keyDaCao, setKeyDaCao] = useState(0)
   const handleGetLenght = () => {
-    ajaxCallGet('get-key').then(rs => {
+    getKey().then(rs => {
       let keyCao = rs.filter(item => {
         if (data_current_id_cam) {
           return (item.check === 1 && item.id_cam === data_current_id_cam)

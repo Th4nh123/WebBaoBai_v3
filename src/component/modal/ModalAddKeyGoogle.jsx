@@ -1,36 +1,55 @@
 import React from 'react'
+
+import { useSelector } from 'react-redux';
+
+import $ from 'jquery'
+
 import { useState } from 'react';
+
 import { SaveKeyGoogle } from '../AjaxPost/KeyGoogle';
+
 import { Const_Libs } from '../Toast';
 
 const ModalAddKeyGoogle = (props) => {
 
-    const [keyGoogle, setKeyGoogle] = useState('')
-    
-    const [description, setDescription] = useState('')
-    
+    const [keyGoogle, setKeyGoogle] = useState({
+        key_api: '',
+        description: ''
+    })
+
     const { handleGetAllKeyGg } = props;
 
+    const data_key_google = useSelector(state => state.base.data_key_google)
+
     const handleSubmit = () => {
+        if (data_key_google.length > 0) {
+            if ($(`.google-item-${data_key_google[0]._id}`).css("background-color") != "rgba(0, 0, 0, 0)") {
+                Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+                return;
+            }
+        }
         let data = [{
-            key_api: keyGoogle,
-            description: description,
+            key_api: keyGoogle.key_api,
+            description: keyGoogle.description,
         }]
         SaveKeyGoogle(data).then(response => {
-            console.log(response);
-            handleGetAllKeyGg();
-            setKeyGoogle('');
-            setDescription('');
             if (response.success === true) {
                 Const_Libs.TOAST.success(response.message)
             }
             else {
                 Const_Libs.TOAST.error(response.message)
             }
+            handleGetAllKeyGg();
+            resetData();
         })
     }
 
-
+    const resetData = () => {
+        setKeyGoogle({
+            key_api: '',
+            description: ''
+        })
+    }
     return (
         <>
             <button type="button" className="btn btn-primary fw-bolder" data-bs-toggle="modal" data-bs-target="#myModalAddKeyGoogle" style={{ fontSize: '14px' }}>
@@ -52,8 +71,8 @@ const ModalAddKeyGoogle = (props) => {
                                             <input type="text"
                                                 className="form-control" id="name-campaign"
                                                 placeholder="Nhập ở đây"
-                                                value={keyGoogle}
-                                                onChange={e => setKeyGoogle(e.target.value)}
+                                                value={keyGoogle.key_api}
+                                                onChange={e => setKeyGoogle({ ...keyGoogle, key_api: e.target.value })}
                                             />
                                         </div>
                                         <div className="col-5">
@@ -61,8 +80,8 @@ const ModalAddKeyGoogle = (props) => {
                                             <input type="text"
                                                 className="form-control" id="name-campaign"
                                                 placeholder="Nhập mô tả"
-                                                value={description}
-                                                onChange={e => setDescription(e.target.value)}
+                                                value={keyGoogle.description}
+                                                onChange={e => setKeyGoogle({ ...keyGoogle, description: e.target.value })}
                                             />
                                         </div>
                                     </div>

@@ -26,13 +26,25 @@ export async function deleteAllKeyGg() {
 }
 
 export async function UpdateCountKeyGoogle(key_gg) {
+    let response = null
     await ajaxCallPost(`update-count-key-google/${key_gg}`).then(rs => {
-        console.log(rs.message);
+        response = rs;
     })
+    return response;
 }
 
 export async function ResetAllKeyGoogle() {
+    let response = null
     await ajaxCallPostNoR(`reset-all-key-google`).then(rs => {
-        console.log(rs.message);
+        response = rs;
     })
+    return response;
+}
+
+export async function getNextKeyGoogle(key) {
+    let response = null
+    await ajaxCallPostNoR(`get-next-key-google/${key}`).then(rs => {
+        response = rs;
+    })
+    return response;
 }

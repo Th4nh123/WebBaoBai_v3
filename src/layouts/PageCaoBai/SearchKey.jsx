@@ -1,7 +1,7 @@
 import React from 'react'
 import $ from 'jquery'
 import { useSelector, useDispatch } from 'react-redux';
-import { ajaxCallGet } from '../../component/libs/base';
+import { findKey, getKeyByIdCam } from '../../component/AjaxGet';
 import { changeDataKey } from '../../component/reducer_action/BaseReducerAction';
 
 const SearchKey = () => {
@@ -9,7 +9,7 @@ const SearchKey = () => {
     const data_current_id_cam = useSelector(state => state.base.current_id_cam)
 
     const handleGetKeyByIdCam = (id) => {
-        ajaxCallGet(`get-key-by-id-cam/` + id).then(rs => {
+        getKeyByIdCam(id).then(rs => {
             $('.box-note-default').addClass('d-flex');
             $('.box-note-default').removeClass('d-none');
             $('.box-note-all').addClass('d-none');
@@ -24,6 +24,7 @@ const SearchKey = () => {
      * @param name_key: tên của key
      * @author XHieu
      */
+
     const findLikeKey = name_key => {
         if (name_key === '') {
             if (data_current_id_cam) {
@@ -31,14 +32,14 @@ const SearchKey = () => {
             }
         } else {
             if (data_current_id_cam) {
-                ajaxCallGet('find-key/' + name_key).then(async rs => {
+                findKey(name_key).then(async rs => {
                     let arr = await rs.filter((item) => {
                         return item.id_cam === data_current_id_cam;
                     })
                     dispatch(changeDataKey([...arr]))
                 }).catch(err => console.log(err))
             } else {
-                ajaxCallGet('find-key/' + name_key).then(rs => {
+                findKey(name_key).then(async rs => {
                     dispatch(changeDataKey([...rs]))
                 }).catch(err => console.log(err))
             }

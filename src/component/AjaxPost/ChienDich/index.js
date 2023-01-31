@@ -23,3 +23,19 @@ export async function DeleteAllCam() {
     })
     return response;
 }
+
+export async function resetCam(id_cam) {
+    let response = null
+    await ajaxCallPostNoR(`reset-cam/${id_cam}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}
+
+export async function updateCam(id_cam) {
+    let response = null
+    await ajaxCallPostNoR(`update-cam/${id_cam}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}

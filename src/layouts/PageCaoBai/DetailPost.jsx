@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import { ajaxCallGet } from '../../component/libs/base';
+import { getDetailPost } from '../../component/AjaxGet';
 import { changeDetailPost } from '../../component/reducer_action/BaseReducerAction'
 
 const DetailPost = ({id}) => {
@@ -9,11 +9,12 @@ const DetailPost = ({id}) => {
     /**
  * Lấy ra chi tiết bài post
  *
+
  * @param id_key
  * @author XHieu
  */
     const getDetailPost = async id_post => {
-        await ajaxCallGet('get-detail-post/' + id_post).then(rs => {
+        await getDetailPost(id_post).then(rs => {
             dispatch(changeDetailPost({ ...rs[0] }))
         }).catch(err => console.log(err))
     }

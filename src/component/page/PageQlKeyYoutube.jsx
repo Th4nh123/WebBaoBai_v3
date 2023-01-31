@@ -19,8 +19,8 @@ import XoaKeyYt from '../../layouts/PageKeyYoutube/XoaKeyYt'
 const PageQlKeyYoutube = () => {
     const dispatch = useDispatch();
 
-    const handleGetAllKeyYt = () => {
-        getAllKeyYt().then(arr => {
+    const handleGetAllKeyYt = async () => {
+        await getAllKeyYt().then(arr => {
             dispatch(changeDataKeyYoutube([...arr]))
         })
     }

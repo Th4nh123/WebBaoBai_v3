@@ -4,7 +4,7 @@ import { OutTable, ExcelRenderer } from 'react-excel-renderer';
 
 import { ajaxCallGet, ajaxCallPost } from '../../component/libs/base';
 import { changeDataSpinWord } from '../../component/reducer_action/BaseReducerAction';
-import { Const_Libs } from '../../component/libs/Const_Libs';
+import { Const_Libs } from '../../component/Toast';
 
 const NhapExcel = () => {
   const dispatch = useDispatch()

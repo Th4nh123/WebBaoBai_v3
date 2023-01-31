@@ -1,9 +1,24 @@
 import React, { useState } from 'react'
 import $ from 'jquery'
 import { useDispatch, useSelector } from 'react-redux'
-import { ajaxCallGet ,URL_API_GET} from '../../component/libs/base'
-import { Const_Libs } from '../../component/libs/Const_Libs'
-import { changeCheckKey, changeCurrentIdKey, changeDataKey, changeDataKeyHaveGoogle, changeDataKeyHaveVideo, changeDataUrl} from '../../component/reducer_action/BaseReducerAction'
+import { ajaxCallGet, URL_API_GET } from '../../component/libs/base'
+
+import { 
+    getKey, 
+    getKeyByIdCam, 
+    getUrlByIdKey, 
+    getKeyWordHaveVideo, 
+    getKeyWordHaveGoogle 
+} from '../../component/AjaxGet'
+
+import { 
+    resetKey, 
+    deleteUrlByIdKey
+} from '../../component/AjaxPost/Key'
+
+import { Const_Libs } from '../../component/Toast'
+
+import { changeCheckKey, changeCurrentIdKey, changeDataKey, changeDataKeyHaveGoogle, changeDataKeyHaveVideo, changeDataUrl } from '../../component/reducer_action/BaseReducerAction'
 
 const XoaData = () => {
     const dispatch = useDispatch()
@@ -21,7 +36,7 @@ const XoaData = () => {
                         await ajaxCallGet(`update-vi-tri/${id_key}`).then(rs => {
                             // console.log("update vi tri thanh cong " + id_key);
                         })
-                            // .catch(err => console.log(err))
+                        // .catch(err => console.log(err))
                     }
                 }
                 document.querySelector('input[name="key-all"]').checked = false;
@@ -40,7 +55,7 @@ const XoaData = () => {
 
 
     const handleGetKeyByIdCam = (id) => {
-        ajaxCallGet(`get-key-by-id-cam/` + id).then(rs => {
+        getKeyByIdCam(id).then(rs => {
             $('.box-note-default').addClass('d-flex');
             $('.box-note-default').removeClass('d-none');
             $('.box-note-all').addClass('d-none');
@@ -51,7 +66,7 @@ const XoaData = () => {
     }
 
     const handleGetKey = () => {
-        ajaxCallGet('get-key').then(rs => {
+        getKey().then(rs => {
             dispatch(changeDataKey([...rs]))
         })
         // .catch(err => console.log(err))
@@ -60,12 +75,12 @@ const XoaData = () => {
 
     const handleResetKey = idKey => {
         if (data_current_id_cam) {
-            ajaxCallGet('reset-key/' + idKey).then(rs => {
+            resetKey(idKey).then(rs => {
                 handleGetKeyByIdCam(data_current_id_cam)
             })
             // .catch(err => console.log(err))
         } else {
-            ajaxCallGet('reset-key/' + idKey).then(rs => {
+            resetKey(idKey).then(rs => {
                 handleGetKey()
             })
             // .catch(err => console.log(err))
@@ -76,7 +91,7 @@ const XoaData = () => {
         let key = dataKey.filter(item => item.id === id_key)
         // set_current_key_ref(key[0])
         dispatch(changeCurrentIdKey(id_key))
-        return await ajaxCallGet('get-url-by-id-key/' + id_key).then(rs => {
+        return await getUrlByIdKey(id_key).then(rs => {
             for (let i = 0; i < rs.length; i++) {
                 rs[i].state = 'create'
             }
@@ -87,7 +102,7 @@ const XoaData = () => {
     }
     const getDataIdHaveVideo = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-video/${id_cam}`).then(async rs => {
+        await getKeyWordHaveVideo(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -102,10 +117,10 @@ const XoaData = () => {
         })
     }
 
-    
+
     const getDataIdHaveUrlGoogle = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-url-google/${id_cam}`).then(async rs => {
+        await getKeyWordHaveGoogle(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -154,7 +169,7 @@ const XoaData = () => {
                     if (checkbox.checked) {
                         let id_key = checkbox.getAttribute('data-id-key')
 
-                        await ajaxCallGet('delete-url-by-id-key/' + id_key).then(rs => {
+                        await deleteUrlByIdKey(id_key).then(rs => {
                             handleResetKey(id_key)
                             handleGetUrlByKey(id_key)
                         }).catch(err => console.log(err))

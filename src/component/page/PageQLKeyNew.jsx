@@ -13,7 +13,7 @@ export default function PageQLKeyNew() {
 
     const data_current_id_cam = useSelector(state => state.base.current_id_cam);
 
-    const handleGetKeyByIdCam = (id_cam) => {
+    const handleGetKeyByIdCam = async (id_cam) => {
         getKeyByIdCam(id_cam).then(arr => {
             dispatch(changeDataKey([...arr]))
         })

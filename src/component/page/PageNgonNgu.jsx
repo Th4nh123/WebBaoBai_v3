@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ajaxCallGet } from "../libs/base";
 import { changeNgonNgu } from "../reducer_action/BaseReducerAction";
 import ModalAddNgonNgu from "../modal/ModalAddLanguage";
-import { Const_Libs } from "../libs/Const_Libs";
+import { Const_Libs } from "../Toast";
 
 const PageNgonNgu = () => {
     const dispatch = useDispatch()

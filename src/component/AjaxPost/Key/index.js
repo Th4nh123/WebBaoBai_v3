@@ -24,3 +24,35 @@ export async function deleteAllKey(data_current_id_cam) {
     })
     return response;
 }
+
+export async function deleteUrl(url) {
+    let response = null
+    await ajaxCallPostNoR(`delete-url/${url}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}
+
+export async function deleteUrlByIdKey(key) {
+    let response = null
+    await ajaxCallPostNoR(`delete-url-by-id-key/${key}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}
+
+export async function resetKey(key) {
+    let response = null
+    await ajaxCallPostNoR(`reset-key/${key}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}
+
+export async function updateKey(key) {
+    let response = null
+    await ajaxCallPostNoR(`update-key/${key}`).then(rs => {
+        response = rs;
+    })
+    return response;
+}

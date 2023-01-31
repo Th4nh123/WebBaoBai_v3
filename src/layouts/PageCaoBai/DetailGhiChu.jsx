@@ -3,28 +3,27 @@ import $ from 'jquery'
 import { useSelector, useDispatch } from 'react-redux';
 
 import { changeDataKey } from '../../component/reducer_action/BaseReducerAction';
-import { ajaxCallGet } from '../../component/libs/base';
-import { Const_Libs } from '../../component/libs/Const_Libs'
+import { getKeyByIdCam,getKeyNoneUrl } from '../../component/AjaxGet';
+import { Const_Libs } from '../../component/Toast'
 
 const DetailGhichu = () => {
     const dispatch = useDispatch();
     const data_current_id_cam = useSelector(state => state.base.current_id_cam)
 
     const handleGetKeyByIdCam = (id) => {
-        ajaxCallGet(`get-key-by-id-cam/` + id).then(rs => {
+        getKeyByIdCam(id).then(rs => {
             $('.box-note-default').addClass('d-flex');
             $('.box-note-default').removeClass('d-none');
             $('.box-note-all').addClass('d-none');
             $('.box-note-all').removeClass('d-flex');
             dispatch(changeDataKey([...rs]));
-        }).catch(err => console.log(err))
+        })
     }
 
     const handleGetKeyNoneUrl = async () => {
         if (data_current_id_cam) {
             Const_Libs.TOAST.success("Vui lòng đợi trong giây lát")
-            await ajaxCallGet(`get-key-none-url/${data_current_id_cam}`)
-                .then(rs => {
+            await getKeyNoneUrl(data_current_id_cam).then(rs => {
                     console.log(rs);
                     if (rs.length === 0) {
                         Const_Libs.TOAST.success("Chiến dịch này đã có URL hết rồi")

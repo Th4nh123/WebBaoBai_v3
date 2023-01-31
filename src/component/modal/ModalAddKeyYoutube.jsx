@@ -4,14 +4,17 @@ import { SaveKeyYoutube } from '../AjaxPost/KeyYoutube';
 import { Const_Libs } from '../Toast';
 
 const ModalAddKeyYoutube = (props) => {
-    const [keyYoutube, setKeyYoutube] = useState('')
-    const [description, setDescription] = useState('')
+    const [keyYoutube, setKeyYoutube] = useState({
+        key_api: '',
+        description: ''
+    })
+
     const { handleGetAllKeyYt } = props;
 
     const handleSubmit = () => {
         let data = [{
-            key_api: keyYoutube,
-            description: description
+            key_api: keyYoutube.key_api,
+            description: keyYoutube.description
         }]
         SaveKeyYoutube(data).then(response => {
             if (response.success === true) {
@@ -21,13 +24,18 @@ const ModalAddKeyYoutube = (props) => {
                 Const_Libs.TOAST.error(response.message)
             }
             handleGetAllKeyYt();
-            setKeyYoutube('');
-            setDescription('');
+            resetData();
         })
         // .catch(err => { Const_Libs.TOAST.error("Thêm thất bại"); })
 
     }
 
+    const resetData = () => {
+        setKeyYoutube({
+            key_api: '',
+            description: ''
+        })
+    }
 
     return (
         <>
@@ -50,8 +58,8 @@ const ModalAddKeyYoutube = (props) => {
                                             <input type="text"
                                                 className="form-control" id="name-campaign"
                                                 placeholder="Nhập ở đây"
-                                                value={keyYoutube}
-                                                onChange={e => setKeyYoutube(e.target.value)}
+                                                value={keyYoutube.key_api}
+                                                onChange={e => setKeyYoutube({ ...keyYoutube, key_api: e.target.value })}
                                             />
                                         </div>
                                         <div className="col-5">
@@ -59,8 +67,8 @@ const ModalAddKeyYoutube = (props) => {
                                             <input type="text"
                                                 className="form-control" id="name-campaign"
                                                 placeholder="Nhập mô tả"
-                                                value={description}
-                                                onChange={e => setDescription(e.target.value)}
+                                                value={keyYoutube.description}
+                                                onChange={e => setKeyYoutube({ ...keyYoutube, description: e.target.value })}
                                             />
                                         </div>
                                     </div>

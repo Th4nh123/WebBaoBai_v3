@@ -2,8 +2,8 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import useStateRef from 'react-usestateref'
 
-import { ajaxCallGet } from '../../component/libs/base';
-import { Const_Libs } from '../../component/libs/Const_Libs'
+import { resetCam } from '../../component/AjaxPost/ChienDich';
+import { Const_Libs } from '../../component/Toast'
 import { changeTrangThaiCam, changeTrangThaiCaoBai } from '../../component/reducer_action/BaseReducerAction';
 
 const DungCaoBai = (props) => {
@@ -14,10 +14,10 @@ const DungCaoBai = (props) => {
     const data_current_id_cam = useSelector(state => state.base.current_id_cam)
     const data_trang_thai_cam = useSelector(state => state.base.data_trang_thai_cam);
 
-    const handleResetCam = (id) => {
-        ajaxCallGet(`reset-cam/${id}`).then(async rs => {
-            await dispatch(changeTrangThaiCam(false));
-            Const_Libs.TOAST.success("Chiến dịch này đã được dừng lại, vui lòng đợi chạy nốt URL này")
+    const handleResetCam = (id_cam) => {
+        resetCam(id_cam).then(async response => {
+            dispatch(changeTrangThaiCam(false));
+            Const_Libs.TOAST.success(response.message)
         })
         // .catch(err => console.log(err))
     }

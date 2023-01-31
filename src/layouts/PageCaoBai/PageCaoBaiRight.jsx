@@ -13,12 +13,6 @@ const PageCaoBaiRight = (props) => {
     const data_current_id_cam = useSelector(state => state.base.current_id_cam)
     const data_trang_thai_cam = useSelector(state => state.base.data_trang_thai_cam)
 
-    const [
-        current_key_ref,
-        set_current_key_ref,
-        get_current_key_ref
-    ] = useStateRef(null)
-
     return (
         <div className='col-9 right' style={{ height: '77vh' }}>
             <div className='right-container position-relative' style={{ overflowY: 'scroll' }}>

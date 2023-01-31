@@ -1,5 +1,6 @@
 import React from 'react'
 
+import { findLikeUrl } from "../../component/AjaxGet";
 const SearchUrl = () => {
     /**
 * Tìm kiếm theo tiêu đề bài post để lấy ra url
@@ -12,7 +13,7 @@ const SearchUrl = () => {
         if (name === '') {
             handleGetUrlByKey(get_current_id_key.current)
         } else {
-            ajaxCallGet('find-like-url/' + name).then(rs => {
+            findLikeUrl(name).then(rs => {
                 for (let i = 0; i < rs.length; i++) {
                     rs[i].state = 'create'
                 }

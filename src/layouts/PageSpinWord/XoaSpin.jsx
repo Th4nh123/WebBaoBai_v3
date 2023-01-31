@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { ajaxCallGet } from '../../component/libs/base';
 import { changeDataSpinWord } from '../../component/reducer_action/BaseReducerAction';
-import { Const_Libs } from '../../component/libs/Const_Libs';
+import { Const_Libs } from '../../component/Toast';
 
 
 const XoaSpin = () => {

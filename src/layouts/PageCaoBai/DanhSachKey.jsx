@@ -3,7 +3,7 @@ import $ from 'jquery'
 import { useDispatch, useSelector } from 'react-redux'
 import useStateRef from 'react-usestateref'
 
-import { getUrlByIdKey, getDataIdHaveGoogle, getDataIdHaveVideo ,getIdKey} from '../../component/AjaxGet'
+import { getUrlByIdKey, getKeyWordHaveGoogle, getKeyWordHaveVideo, getOneKey } from '../../component/AjaxGet'
 import { changeCheckKey, changeCurrentIdKey, changeDataKeyHaveGoogle, changeDataKeyHaveVideo, changeDataUrl } from '../../component/reducer_action/BaseReducerAction'
 import SearchKey from './SearchKey'
 
@@ -23,6 +23,7 @@ const DanhSachKey = () => {
     const checkKey = useSelector(state => state.base.check_key)
     const data_key_have_video = useSelector(state => state.base.data_key_have_video);
     const data_key_have_url_google = useSelector(state => state.base.data_key_have_google);
+
     /**
        * Thay đổi nút bắt đầu cào và cào lại, 
        *
@@ -37,41 +38,19 @@ const DanhSachKey = () => {
         }
     }, [checkKey.length])
 
-    const handleGetUrlByKey = async id_key => {
-        let key = dataKey.filter(item => item.id == id_key)
-        set_current_key_ref(key[0])
-        $('.ky-hieu').html(key[0].ky_hieu)
-        // set_current_id_key(id_key)
-        dispatch(changeCurrentIdKey(id_key))
-        return await getUrlByIdKey(id_key).then(rs => {
-            for (let i = 0; i < rs.length; i++) {
-                rs[i].state = 'create'
-            }
-            dispatch(changeDataUrl([...rs]))
-            return rs
-        }).catch(err => console.log(err))
-    }
-
-    const addRemoveCheck = (id) => {
-        const isChecked = checkKey.includes(id);
-        if (isChecked) {
-            return checkKey.filter(item => item !== id)
-        } else {
-            return [...checkKey, id]
-        }
-
-    }
     useEffect(() => {
-        getDataIdHaveVideo(current_id_cam)
-        getDataIdHaveUrlGoogle(current_id_cam)
+        if (current_id_cam) {
+            getDataIdHaveVideo(current_id_cam)
+            getDataIdHaveUrlGoogle(current_id_cam)   
+        }
     }, [current_id_cam])
 
 
     const getDataIdHaveVideo = async (id_cam) => {
         let arr1 = [];
-        await getDataIdHaveVideo(id_cam).then(async rs => {
+        await getKeyWordHaveVideo(id_cam).then(async rs => {
             await rs.map(item => {
-                arr1.push(item.id);
+                arr1.push(item._id);
             })
             let reducedArray = arr1.reduce((acc, curr, _, arr) => {
                 if (acc.length == 0) acc.push({ idKey: curr, count: 1 })
@@ -86,9 +65,9 @@ const DanhSachKey = () => {
 
     const getDataIdHaveUrlGoogle = async (id_cam) => {
         let arr1 = [];
-        await getDataIdHaveGoogle(id_cam).then(async rs => {
+        await getKeyWordHaveGoogle(id_cam).then(async rs => {
             await rs.map(item => {
-                arr1.push(item.id);
+                arr1.push(item._id);
             })
             let reducedArray = arr1.reduce((acc, curr, _, arr) => {
                 if (acc.length == 0) acc.push({ idKey: curr, count: 1 })
@@ -147,10 +126,46 @@ const DanhSachKey = () => {
         }
     }
 
+    const handleGetUrlByKey = async id_key => {
+        let key = dataKey.filter(item => item.id == id_key)
+        set_current_key_ref(key[0])
+        // set_current_id_key(id_key)
+        dispatch(changeCurrentIdKey(id_key))
+        return await getUrlByIdKey(id_key).then(rs => {
+            console.log(rs);
+            for (let i = 0; i < rs.length; i++) {
+                rs[i].state = 'create'
+            }
+            dispatch(changeDataUrl([...rs]))
+            return rs
+        }).catch(err => console.log(err))
+    }
+
+    const addRemoveCheck = (id) => {
+        console.log(checkKey);
+        const isChecked = checkKey.includes(id);
+        if (isChecked) {
+            return checkKey.filter(item => item !== id)
+        } else {
+            return [...checkKey, id]
+        }
+    }
+
     const handleChangeCheckBoxKey = (id) => {
-        console.log(id);
+        // console.log(id);
         dispatch(changeCheckKey(addRemoveCheck(id)))
     }
+
+    const getIdKey = async () => {
+        let arr = [];
+        await getOneKey(current_id_cam).then(async rs => {
+            await rs.map(item => {
+                arr.push(item._id)
+            })
+        })
+        dispatch(changeCheckKey([...arr]));
+    }
+
 
     const handleCheckKeyAll = () => {
         if ($('#check-key-cao-all').prop('checked')) {
@@ -164,15 +179,6 @@ const DanhSachKey = () => {
         }
     }
 
-    const getIdKey = async () => {
-        let arr = [];
-        await getIdKey(current_id_cam).then(async rs => {
-            await rs.map(item => {
-                arr.push(item.id)
-            })
-        }).catch(err => console.log(err))
-        dispatch(changeCheckKey([...arr]));
-    }
     return (
         <>
             <div className='d-flex align-items-cente position-sticky  align-items-center'
@@ -193,8 +199,8 @@ const DanhSachKey = () => {
             <div className='list-key' style={{ position: 'relative' }}>
                 {dataKey.length == 0 ? <span>Không tồn tại key</span> : ''}
                 {dataKey.map((item, index) => {
-                    let label_key = `label-key-${item.id}`
-                    let input_key = `input-key-${item.id}`
+                    let label_key = `label-key-${item._id}`
+                    let input_key = `input-key-${item._id}`
                     return (
 
                         <div
@@ -205,16 +211,16 @@ const DanhSachKey = () => {
                             <input
                                 type='checkbox'
                                 name='key'
-                                data-id-key={item.id}
+                                data-id-key={item._id}
                                 data-index-key={index}
                                 className={`me-2 input-key ${input_key}`}
                                 data-name-key={item.ten}
-                                checked={checkKey.includes(item.id)}
-                                onChange={() => handleChangeCheckBoxKey(item.id)}
+                                checked={checkKey.includes(item._id)}
+                                onChange={() => handleChangeCheckBoxKey(item._id)}
                             />
                             <label
                                 style={{ marginLeft: '8px', cursor: 'pointer' }}
-                                
+
                                 className={
                                     item.check == true
                                         ? `h-100 mt-2 text-primary label-key ${label_key}`
@@ -222,12 +228,12 @@ const DanhSachKey = () => {
                                 }
                                 data-id-key={item.id}
                                 id={
-                                    current_id_key === item.id
+                                    current_id_key === item._id
                                         ? 'text-green'
                                         : ''
                                 }
                                 onClick={() => {
-                                    handleGetUrlByKey(item.id)
+                                    handleGetUrlByKey(item._id)
                                 }}
                             >
 
@@ -237,8 +243,8 @@ const DanhSachKey = () => {
                                 // className={get_current_id_key.current === item.id ? 'fa-regular fa-circle-play color-primary' : ''}
                                 style={{ fontSize: '13px', position: 'absolute', right: '16px', color: '#605c5c' }}
                             >
-                                {!isEnoughtYoutube(item.id, item.ky_hieu, data_key_have_video) && <i className="fa-brands fa-youtube" style={{ color: 'red' }}></i>}
-                                {!isEnoughtGoogle(item.id, item.ky_hieu, data_key_have_url_google) && <i className="fa-brands fa-google" style={{ color: 'orange', marginLeft: '8px' }}></i>}
+                                {!isEnoughtYoutube(item._id, item.ky_hieu, data_key_have_video) && <i className="fa-brands fa-youtube" style={{ color: 'red' }}></i>}
+                                {!isEnoughtGoogle(item._id, item.ky_hieu, data_key_have_url_google) && <i className="fa-brands fa-google" style={{ color: 'orange', marginLeft: '8px' }}></i>}
                             </span>
                         </div>
                     )

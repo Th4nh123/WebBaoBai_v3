@@ -13,8 +13,6 @@ export const KEY_API_SEARCH = "AIzaSyAgFsQKOcyb9s3MOvEWPf0005zXFgjXqKc";
 
 export const LINK_SEARCH = "https://www.googleapis.com/customsearch/v1?";
 
-export const KEY_API_SEARCH_YOUTUBE =
-  "f202241f8amsh2ec5fe7dc999166p15413fjsn5cf4a7250dc4";
 export const CX_SEARCH = "622357283d8f7426e";
 
 export const KEY_API_TRANS = "AIzaSyAtvWiWUms7XR_NkzhFXFkLa4BM-5jUTdE";

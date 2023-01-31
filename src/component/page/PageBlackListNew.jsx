@@ -21,7 +21,7 @@ export default function PageBlacklistDomain() {
 
   const current_id_cam = useSelector(state => state.base.current_id_cam)
 
-  const handleGetBlackListByIdCam = (id_cam) => {
+  const handleGetBlackListByIdCam = async (id_cam) => {
     getBlackListByIdCam(id_cam).then( arr => {
       dispatch(changeDataBlackList([...arr]))
     })

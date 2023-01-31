@@ -5,7 +5,7 @@ import useStateRef from 'react-usestateref'
 
 import { changeCheckKey, changeCurrentIdKey, changeDataKey, changeDataUrl, changeTrangThaiCam } from '../../component/reducer_action/BaseReducerAction';
 import { ajaxCallGet, ajaxCallPost, URL_API_GET } from '../../component/libs/base';
-import { Const_Libs } from '../../component/libs/Const_Libs'
+import { Const_Libs } from '../../component/Toast'
 
 const CaoLai = (props) => {
     const dispatch = useDispatch();

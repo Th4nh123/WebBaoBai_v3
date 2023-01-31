@@ -26,7 +26,7 @@ const XoaKey = (props) => {
     await deleteKey(arr).then(response => {
       $('#checkbox-all-key').prop('checked', false)
       $('input[name="checkbox-key"]').prop('checked', false)
-      handleGetKeyByIdCam();
+      handleGetKeyByIdCam(data_current_id_cam);
       if (response.success === true) {
         Const_Libs.TOAST.success(response.message)
       }
@@ -43,7 +43,7 @@ const XoaKey = (props) => {
       $('.btn-delete-all-key').addClass('d-none');
       $('.btn-delete-key').removeClass('d-none');
 
-      handleGetKeyByIdCam();
+      handleGetKeyByIdCam(data_current_id_cam);
       if (response.success === true) {
         Const_Libs.TOAST.success(response.message)
       }

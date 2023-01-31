@@ -6,7 +6,34 @@ import { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { ajaxCallGet, ajaxCallPost, CX_SEARCH, getHostname, getHostname2, LINK_SEARCH, URL_API_GET } from '../../component/libs/base'
-import { Const_Libs } from '../../component/libs/Const_Libs';
+import {
+    getKeyYoutube,
+    getKeyGoogle,
+    getUrlByGoogle,
+    getUrlByYoutube,
+    getUrlYoutubeByIdPlayList,
+    getBlackListByIdCam,
+    getKeyWordHaveVideo,
+    getKeyWordHaveGoogle,
+    getFirstKeyGg,
+    getFirstKeyYt,
+    getUrlByIdKey2,
+    getKyHieu
+} from '../../component/AjaxGet'
+import {
+    UpdateCountKeyGoogle,
+    getNextKeyGoogle,
+    ResetAllKeyGoogle
+} from '../../component/AjaxPost/KeyGoogle'
+
+import {
+    UpdateCountKeyYoutube,
+    getNextKeyYoutube,
+    ResetAllKeyYoutube
+} from '../../component/AjaxPost/KeyYoutube'
+
+import { SaveWeb, SaveVideo, SaveFile, SaveImage,UpdateViTri } from '../../component/AjaxPost/CaoBai'
+import { Const_Libs } from '../../component/Toast';
 import { changeCheckKey, changeDataKeyGoogle, changeDataKeyHaveGoogle, changeDataKeyHaveVideo, changeDataKeyYoutube, changeKeyGoogle } from '../../component/reducer_action/BaseReducerAction';
 
 const LayUrlNew = () => {
@@ -15,67 +42,14 @@ const LayUrlNew = () => {
     const data_key_checked = useSelector(state => state.base.check_key)
 
     const list_kh = ["w", "i", "doc", "y", "pdf", "excel"];
-    const list_nd = ["Cào nội dung web",
+    const list_nd = [
+        "Cào nội dung web",
         "Hình ảnh + Tiêu đề hình ảnh",
         "filetype:doc",
         "Video + Tiêu đề video",
         "filetype:pdf",
-        "filetype:excel"];
-
-
-
-
-    const UpdateCountKeyGoogle = (KEY_API_SEARCH) => {
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        fetch(`${URL_API_GET}update-count-key-google/${KEY_API_SEARCH}`, options).then(response => response.json())
-            // .then(rs => console.log("update count thanh cong", rs))
-            .catch(err => console.log(err))
-    }
-
-    const UpdateCountKeyYoutube = (KEY_API_SEARCH) => {
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        fetch(`${URL_API_GET}update-count-key-youtube/${KEY_API_SEARCH}`, options).then(response => response.json())
-            // .then(rs => console.log("update count thanh cong", rs))
-            .catch(err => console.log(err))
-    }
-
-
-
-    const getNextKeyGoogle = async (KEY_API_SEARCH) => {
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        await fetch(`${URL_API_GET}get-next-key-google/${KEY_API_SEARCH}`, options).then(rs => {
-            console.log('get next key GG', rs)
-        })
-            .catch(err => console.log(err))
-    }
-
-    const getNextKeyYoutube = async (KEY_API_SEARCH) => {
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }
-        await fetch(`${URL_API_GET}get-next-key-youtube/${KEY_API_SEARCH}`, options).then(rs => {
-            console.log('get next key YT', rs)
-        })
-            .catch(err => console.log(err))
-    }
+        "filetype:excel"
+    ];
 
     const LayUrlAll = async (kh, so_luong, key_search, id_key, nd, timeOut, id_list_vd, stt) => {
         switch (kh) {
@@ -107,106 +81,36 @@ const LayUrlNew = () => {
                 throw new Error('Invalid');
         }
     }
-    
-    // Việc trả về đúng số lượng video là do api google
-    async function getUrlByYoutube(so_luong, key_search, id_key, id_list_vd, timeOut) {
-        let result;
-        var check = false;
-        // var checkLimitKey = false;
-        let KEY_API_SEARCH;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-        await fetch(URL_API_GET + 'get-key-youtube', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { KEY_API_SEARCH = rs[0].key_api }
-            })
-            .catch(err => console.log(err))
-        if (Boolean(KEY_API_SEARCH) === true) {
-            if (Boolean(id_list_vd) === true) {
-                const options = {
-                    method: 'GET',
-                    url: 'https://youtube-v31.p.rapidapi.com/playlistItems',
-                    params: {
-                        playlistId: id_list_vd,
-                        part: 'snippet',
-                        maxResults: '50',
-                    },
-                    headers: {
-                        'X-RapidAPI-Key': KEY_API_SEARCH,
-                        'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com'
-                    }
-                };
 
-                await axios.request(options).then(async function (response) {
-                    if (response.status === 200) {
-                        await UpdateCountKeyYoutube(KEY_API_SEARCH);
-                        result = [...response.data.items]
-                        check = true;
-                    }
-                }).catch(function (error) {
-                    console.error(error);
-                });
-                if (check === false) {
-                    await getNextKeyYoutube(KEY_API_SEARCH)
+    // Việc trả về đúng số lượng video là do api google
+    async function getUrlYoutube(so_luong, key_search, id_key, id_list_vd, timeOut) {
+        let result;
+        // var checkLimitKey = false;
+        await getKeyYoutube().then(async rs => {
+            let response;
+            if (rs) {
+                if (Boolean(id_list_vd) === true) {
+                    response = getUrlYoutubeByIdPlayList(id_list_vd, rs.key_api, 50)
+                } else {
+                    response = getUrlByYoutube(so_luong, rs.key_api, key_search)
                 }
-            } else {
-                const options = {
-                    method: 'GET',
-                    url: 'https://youtube-v31.p.rapidapi.com/search',
-                    params: {
-                        q: key_search,
-                        part: 'snippet,id',
-                        maxResults: so_luong,
-                        order: 'relevance',
-                        // order: 'rating',
-                        regionCode: 'VN'
-                    },
-                    headers: {
-                        'X-RapidAPI-Key': KEY_API_SEARCH,
-                        'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com'
-                    }
-                };
-                //k bắt được lỗi 429
-                await axios.request(options).then(async function (response) {
-                    if (response.status === 200) {
-                        await UpdateCountKeyYoutube(KEY_API_SEARCH);
-                        result = [...response.data.items]
-                        check = true;
-                    }
-                }).catch(function (error) {
-                    console.error(error);
-                })
-                if (check === false) {
-                    await getNextKeyYoutube(KEY_API_SEARCH)
+
+                if (response.status === 200) {
+                    await UpdateCountKeyYoutube(rs._id).then(response => {
+                        console.log(response.message);
+                    })
+                    result = [...response.data.items]
+                }
+                else {
+                    await getNextKeyYoutube(rs._id).then(response => {
+                        console.log(response.message);
+                    })
                 }
             }
-        }
+        })
+
         return result
     }
-
-    const saveVideo = async (dataPost) => {
-        let options = {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(dataPost) // body data type must match "Content-Type" header
-        }
-        await fetch(URL_API_GET + 'save-video ', options).then(async rs => {
-            // if (rs.status === 500) {
-            //     console.log("save lai video lan nua")
-            //     await saveVideo(dataPost)
-            // }
-        })
-            .catch(err => console.log(err))
-    }
-
 
 
     const postVideo = async (key_search, ky_hieu, id_key, so_luong, timeOut, id_list_vd, stt) => {
@@ -215,14 +119,7 @@ const LayUrlNew = () => {
         var count = 0;
         var countOut = 0;
         if (Boolean(id_list_vd) === true) {
-            await getUrlByYoutube(fake_so_luong, key_search, id_key, id_list_vd, timeOut)
-                .then(rs => {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve(rs);
-                        }, 1000)
-                    })
-                })
+            await getUrlYoutube(fake_so_luong, key_search, id_key, id_list_vd, timeOut)
                 .then(async rs => {
                     if (rs.length > 0) { // do rs chắc chắn ra 1 mảng (có thể là rỗng)
                         for (let i = 0; i < rs.length; i++) {
@@ -235,23 +132,14 @@ const LayUrlNew = () => {
                                 stt: stt
                             })
                         }
-                        await saveVideo(dataPost);
-
-                        console.log("DATAPOST: ", dataPost)
-
-
+                        await SaveVideo(dataPost).then(response => {
+                            console.log("DATAPOST: ", dataPost)
+                        });
                     }
                 }).catch(err => console.log(err))
         } else {
             do {
-                await getUrlByYoutube(fake_so_luong, key_search, id_key, id_list_vd, timeOut)
-                    .then(rs => {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve(rs);
-                            }, 1000)
-                        })
-                    })
+                await getUrlYoutube(fake_so_luong, key_search, id_key, id_list_vd, timeOut)
                     .then(async rs => {
                         if (rs.length > 0) { // do rs chắc chắn ra 1 mảng (có thể là rỗng)
                             // Hàm lọc ra mảng có chứa thuộc tính videoId
@@ -270,13 +158,13 @@ const LayUrlNew = () => {
                                         stt: stt
                                     })
                                 }
-                                await saveVideo(dataPost);
                             }
+                            await SaveVideo(dataPost).then(response => {
+                                console.log("DATAPOST: ", dataPost)
+                            });
                             // Nếu k đủ main_rs => fake_count + 10, hết key, 
-
-                            console.log("DATAPOST: ", dataPost)
                         }
-                    }).catch(err => console.log(err))
+                    })
                 // chưa ưng ý, kiểm tra thêm về phần cộng
                 countOut += 1;
                 fake_so_luong += 5;
@@ -287,107 +175,53 @@ const LayUrlNew = () => {
     }
 
 
-    async function getUrlByGoogle(start, count, key_search, timeOut) {
+    async function getUrlGoogle(start, count, key_search, timeOut) {
         let result;
-        let key;
-        let KEY_API_SEARCH;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-        await fetch(URL_API_GET + 'get-key-google', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { KEY_API_SEARCH = rs[0].key_api }
-            })
-            .catch(err => console.log(err))
-        // do {
-        if (Boolean(KEY_API_SEARCH) === true) {
-            await fetch(`${LINK_SEARCH}key=${KEY_API_SEARCH}&cx=${CX_SEARCH}&start=${start}&num=${count}&safe=active&gl=vn&q=${key_search}`).then(async response => {
-                console.log(response);
+        await getKeyGoogle().then(async rs => {
+            // do {
+            if (rs) {
+                let response = getUrlByGoogle(start, count, rs.key_api, key_search, "&gl=vn")
                 if (response.status === 200) {
-                    return response.json()
-                } else if (response.status === 429) {
-                    // arrKey
-                    await getNextKeyGoogle(KEY_API_SEARCH)
-                } else if (response.status === 400) {
+                    await UpdateCountKeyGoogle(rs._id).then(response => {
+                        console.log(response.message);
+                    })
+                    result = [...response.data.items]
                 }
-            })
-                .then(async rs => {
-                    if (rs) {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve(rs);
-                            }, 500)
-                        })
-                    }
-                })
-                .then(async rs => {
-                    if (rs) {
-                        if (rs.url) {
-                            await UpdateCountKeyGoogle(KEY_API_SEARCH);
-                            result = rs;
-                        }
-                    }
-                }).catch(err => console.log(err))
-            return result;
-        }
+                else {
+                    await getNextKeyGoogle(rs._id).then(response => {
+                        console.log(response.message);
+                    })
+                }
 
-
+            }
+        })
         // } while (result === null)
-
+        return result;
     }
 
-    async function getImageByGoogle(start, count, key_search, timeOut) {
+    async function getImageGoogle(start, count, key_search, timeOut) {
         // &imgSize=xxlarge&imgType=photo
         let result;
-        let KEY_API_SEARCH;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-        // do {
-        await fetch(URL_API_GET + 'get-key-google', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { KEY_API_SEARCH = rs[0].key_api }
-            })
-            .catch(err => console.log(err))
-
-        if (Boolean(KEY_API_SEARCH) === true) {
-            await fetch(`${LINK_SEARCH}key=${KEY_API_SEARCH}&cx=${CX_SEARCH}&start=${start}&num=${count}&q=${key_search}&searchType=image&gl=vn`).then(async response => {
+        await getKeyGoogle().then(async rs => {
+            // do {
+            if (rs) {
+                let response = getUrlByGoogle(start, count, rs.key_api, key_search, "&searchType=image&gl=vn")
                 if (response.status === 200) {
-                    return response.json()
-                } else if (response.status === 429) {
-                    await getNextKeyGoogle(KEY_API_SEARCH)
+                    await UpdateCountKeyGoogle(rs._id).then(response => {
+                        console.log(response.message);
+                    })
+                    result = [...response.data.items]
                 }
-                // response.json()
-            })
-                .then(rs => {
-                    if (rs) {
-                        return new Promise((resolve) => {
-                            setTimeout(() => {
-                                resolve(rs);
-                            }, 500)
-                        })
-                    }
-                })
-                .then(async rs => {
-                    if (rs) {
-                        if (rs.url) {
-                            await UpdateCountKeyGoogle(KEY_API_SEARCH);
-                            result = rs;
-                        }
-                    }
-                }).catch(err => console.log(err))
-            return result;
-        }
+                else {
+                    await getNextKeyGoogle(rs._id).then(response => {
+                        console.log(response.message);
+                    })
+                }
 
+            }
+        })
         // } while (result === null)
+        return result;
     }
 
     const PhanTich = async (kh, key_search, id_key, id_list_vd) => {
@@ -553,7 +387,7 @@ const LayUrlNew = () => {
     const getDataWeb = async (key_search, ky_hieu, id_key, start, so_luong, timeOut, stt) => {
         var dataPost = [];
         let arr = [];
-        await getUrlByGoogle(start, so_luong, key_search, timeOut).then(async rs => {
+        await getUrlGoogle(start, so_luong, key_search, timeOut).then(async rs => {
             if (rs) {
                 arr = rs.items
                 for (let i in arr) {
@@ -570,25 +404,6 @@ const LayUrlNew = () => {
             }
         })
         return dataPost;
-    }
-
-    const saveWeb = async (dataPost) => {
-        let options = {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(dataPost) // body data type must match "Content-Type" header
-        }
-        await fetch(URL_API_GET + 'save-web', options).then(rs => {
-            console.log(rs)
-            // if (rs.status === 500) {
-            //     console.log("save lai video lan nua")
-            //     await saveVideo(dataPost)
-            // }
-        })
-            .catch(err => console.log(err))
     }
 
     const postWeb = async (key_search, ky_hieu, id_key, start, so_luong, timeOut, stt) => {
@@ -687,18 +502,18 @@ const LayUrlNew = () => {
                 })
             }
         }
-
-        console.log("RESULT WEB: ", result)
-        await saveWeb(result);
+        await SaveWeb(dataPost).then(response => {
+            console.log("RESULT WEB: ", result)
+        });
     }
 
     const getDataFile = async (start, so_luong, search, key_search, timeOut, stt, ky_hieu, id_key) => {
         var dataPost = [];
         let arr = [], arr2 = [];
-        await getUrlByGoogle(start, so_luong, search, timeOut).then(async rs => {
+        await getUrlGoogle(start, so_luong, search, timeOut).then(async rs => {
             if (rs) {
                 arr = rs.items;
-                await getImageByGoogle(start, so_luong, key_search, 500).then(async rs2 => {
+                await getImageGoogle(start, so_luong, key_search, 500).then(async rs2 => {
                     if (rs2) {
                         arr2 = rs2.items;
                         for (let i in arr) {
@@ -717,20 +532,6 @@ const LayUrlNew = () => {
             }
         })
         return dataPost;
-    }
-
-    const saveFile = async (dataPost) => {
-        let options = {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(dataPost) // body data type must match "Content-Type" header
-        }
-        await fetch(URL_API_GET + 'save-file', options).then(rs => console.log(rs))
-            .catch(err => console.log(err))
-
     }
 
     const postFile = async (key_search, ky_hieu, filetype, id_key, start, so_luong, timeOut, stt) => {
@@ -827,16 +628,17 @@ const LayUrlNew = () => {
                 })
             }
         }
-        console.log("RESULT FILE: ", result)
 
-        await saveFile(result);
+        await SaveFile(result).then(response => {
+            console.log("RESULT FILE: ", result)
+        });
     }
 
     const getDataImage = async (key_search, ky_hieu, id_key, start, so_luong, timeOut, stt) => {
         var dataPost = [];
         let arr = [];
 
-        await getImageByGoogle(start, so_luong, key_search, timeOut).then(async rs => {
+        await getImageGoogle(start, so_luong, key_search, timeOut).then(async rs => {
             console.log(rs);
             if (rs) {
                 arr = rs.items
@@ -856,20 +658,6 @@ const LayUrlNew = () => {
         return dataPost;
     }
 
-    const saveImage = async (dataPost) => {
-        console.log("Result int SAVE IMAGE: ", dataPost);
-        let options = {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(dataPost) // body data type must match "Content-Type" header
-        }
-        await fetch(URL_API_GET + 'save-image', options).then(rs => console.log(rs))
-            .catch(err => console.log(err))
-    }
-
     const getPhanTuBySoLuong = async (arr, so_luong) => {
         console.log(arr);
         if (arr.length > so_luong) {
@@ -887,7 +675,7 @@ const LayUrlNew = () => {
 
         const black_list = new Map()
 
-        await ajaxCallGet(`get-black-list-by-id-cam/${data_current_id_cam}`).then(rs => {
+        await getBlackListByIdCam(data_current_id_cam).then(rs => {
             rs.map((item, index) => {
                 black_list.set(getHostname2(item.domain), index)
             })
@@ -981,19 +769,18 @@ const LayUrlNew = () => {
         result = await getPhanTuBySoLuong(result, so_luong)
         // count = result.length;
         // count_current = so_luong - count;
+        await SaveImage(result).then(response => {
+            console.log("ReSult after BLACKLIST IMAGE: ", result)
 
-        console.log("ReSult after BLACKLIST IMAGE: ", result)
-
-        console.log("Rusult Before BLACKLIST IMAGE: ", dataPost)
-
-        await saveImage(result);
+            console.log("Rusult Before BLACKLIST IMAGE: ", dataPost)
+        });
         // countOut += 1;
 
         // } while (count < so_luong && countOut < 3)
     }
     const getDataIdHaveVideo = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-video/${id_cam}`).then(async rs => {
+        await getKeyWordHaveVideo(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -1010,7 +797,7 @@ const LayUrlNew = () => {
 
     const getDataIdHaveUrlGoogle = async (id_cam) => {
         let arr1 = [];
-        await ajaxCallGet(`get-data-id-have-url-google/${id_cam}`).then(async rs => {
+        await getKeyWordHaveGoogle(id_cam).then(async rs => {
             await rs.map(item => {
                 arr1.push(item.id);
             })
@@ -1025,130 +812,49 @@ const LayUrlNew = () => {
         })
     }
 
-    const isCheckLimitKeyGoogle = async () => {
-        let result = false;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-
-        await fetch(URL_API_GET + 'get-key-google', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { result = true }
-            })
-            .catch(err => console.log(err))
-        return result;
-    }
-
-    const isCheckLimitKeyYoutube = async () => {
-        let result = false;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-
-        await fetch(URL_API_GET + 'get-key-youtube', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { result = true }
-            })
-            .catch(err => console.log(err))
-        return result;
-    }
-
     const resetAllKeyGg = async () => {
-        await ajaxCallGet(`reset-all-key-google`).then(rs => {
+        await ResetAllKeyGoogle().then(rs => {
             console.log('reset all key gg')
-        }).catch(err => console.log(err))
+        })
     }
 
     const resetAllKeyYt = async () => {
-        await ajaxCallGet(`reset-all-key-youtube`).then(rs => {
+        await resetAllKeyYt().then(rs => {
             console.log('reset all key yt')
-        }).catch(err => console.log(err))
+        })
     }
 
     const TestKeyGoogle = async () => {
-        let KEY_API_SEARCH;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-
-        await fetch(URL_API_GET + 'get-first-key-google', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { KEY_API_SEARCH = rs[0].key_api }
-            })
-            .catch(err => console.log(err))
-        if (Boolean(KEY_API_SEARCH) === true) {
-            let key_search = "xay dung la gi"
-            await fetch(`${LINK_SEARCH}key=${KEY_API_SEARCH}&cx=${CX_SEARCH}&start=${1}&num=${2}&q=${key_search}&searchType=image&gl=vn`).then(async response => {
+        await getFirstKeyGg().then(async rs => {
+            if (rs) {
+                let response = getUrlByGoogle(1, 2, rs.key_api, 'xây dựng là gì?', '&searchType=image&gl=vn')
                 if (response.status === 200) {
-                    console.log("KEY IN 200 API: ", KEY_API_SEARCH)
-                    return response.json()
+                    console.log("KEY IN 200 API: ", rs.key_api)
+                    await resetAllKeyGg();
+                    await UpdateCountKeyGoogle(rs._id)
                 } else if (response.status === 429) {
-                    console.log("KEY IN 429 API: ", KEY_API_SEARCH)
+                    console.log("KEY IN 429 API: ", rs.key_api)
                 }
-                // response.json()
-            })
-                .then(async rs => {
-                    if (rs) {
-                        await resetAllKeyGg();
-                        await UpdateCountKeyGoogle(KEY_API_SEARCH);
-                    }
-                }).catch(err => console.log(err))
-        }
+            }
+
+        })
+        
     }
 
     const TestKeyYoutube = async () => {
-        let KEY_API_SEARCH;
-        let options = {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            headers: {
-                'Content-Type': 'application/json'
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-            }
-        }
-        await fetch(URL_API_GET + 'get-first-key-youtube', options).then(rs => rs.json())
-            .then(rs => {
-                if (rs.length > 0) { KEY_API_SEARCH = rs[0].key_api }
-            })
-            .catch(err => console.log(err))
-        if (Boolean(KEY_API_SEARCH) === true) {
-            const options = {
-                method: 'GET',
-                url: 'https://youtube-v31.p.rapidapi.com/search',
-                params: {
-                    q: "xay dung la gi",
-                    part: 'snippet,id',
-                    maxResults: 10,
-                    order: 'relevance',
-                    regionCode: 'VN'
-                },
-                headers: {
-                    'X-RapidAPI-Key': KEY_API_SEARCH,
-                    'X-RapidAPI-Host': 'youtube-v31.p.rapidapi.com'
-                }
-            };
-            //k bắt được lỗi 429
-            await axios.request(options).then(async function (response) {
-                console.log(response);
+        await getFirstKeyYt().then(async rs => {
+            if (rs) {
+                let response = getUrlByYoutube(10, rs.key_api, 'xây dựng là gì?')
                 if (response.status === 200) {
-                    await UpdateCountKeyYoutube(KEY_API_SEARCH);
-                    await resetAllKeyYt();
+                    console.log("KEY IN 200 API: ", rs.key_api)
+                    await resetAllKeyGg();
+                    await UpdateCountKeyGoogle(rs._id)
+                } else if (response.status === 429) {
+                    console.log("KEY IN 429 API: ", rs.key_api)
                 }
-            }).catch(function (error) {
-                console.error(error);
-            })
-        }
+            }
+
+        })
     }
     // w5.i10.w2 => w7.i10
     const handleGetUrl = async () => {
@@ -1158,34 +864,38 @@ const LayUrlNew = () => {
             await TestKeyGoogle();
             await TestKeyYoutube();
             $('.spin-get-url').removeClass('d-none')
+            console.log(1234);
             for (const checkbox of document.querySelectorAll('input[name="key"]')) {
+
+                
                 if (checkbox.checked) {
+                    console.log(checkbox);
                     // if (await isCheckLimitKeyGoogle() === true && await isCheckLimitKeyYoutube() === true) {
-                        let id_key = checkbox.getAttribute('data-id-key')
-                        let name_key = checkbox.getAttribute('data-name-key')
-                        $('.status-get-url').removeClass('d-none')
-                        $('.status-stop').addClass('d-none')
-                        await ajaxCallGet(`get-url-by-id-key2/${id_key}`)
-                            .then(async rs => {
-                                if (rs.length > 0) {
-                                    checkbox.checked = false;
-                                    document.querySelector('input[name="key-all"]').checked = false;
-                                    console.log("Co Url, khong lam gi ca")
-                                } else {
-                                    await ajaxCallGet(`get-ky-hieu/${id_key}`).then(async rs => {
-                                        await PhanTich2(rs[0].ky_hieu, name_key, id_key, rs[0].id_list_vd).then(async rs3 => {
-                                            checkbox.checked = false;
-                                            // await setTimeout(async () => {
-                                            //     await ajaxCallGet(`update-vi-tri/${id_key}`).then(rs => {
-                                            //         console.log("update vi tri thanh cong " + id_key);
-                                            //     })
-                                            //         .catch(err => console.log(err))
-                                            // }, 35000)
-                                        }).catch(err => console.log(err));
-                                    }).catch(err => console.log(err))
-                                }
-                            }).catch(err => console.log(err))
-                        // 
+                    let id_key = checkbox.getAttribute('data-id-key')
+                    let name_key = checkbox.getAttribute('data-name-key')
+                    $('.status-get-url').removeClass('d-none')
+                    $('.status-stop').addClass('d-none')
+                    return;
+                    await getUrlByIdKey2(id_key).then(async rs => {
+                            if (rs.length > 0) {
+                                checkbox.checked = false;
+                                document.querySelector('input[name="key-all"]').checked = false;
+                                console.log("Co Url, khong lam gi ca")
+                            } else {
+                                await getKyHieu(id_key).then(async rs => {
+                                    await PhanTich2(rs[0].ky_hieu, name_key, id_key, rs[0].id_list_vd).then(async rs3 => {
+                                        checkbox.checked = false;
+                                        // await setTimeout(async () => {
+                                        //     await ajaxCallGet(`update-vi-tri/${id_key}`).then(rs => {
+                                        //         console.log("update vi tri thanh cong " + id_key);
+                                        //     })
+                                        //         .catch(err => console.log(err))
+                                        // }, 35000)
+                                    }).catch(err => console.log(err));
+                                }).catch(err => console.log(err))
+                            }
+                        }).catch(err => console.log(err))
+                    // 
                     // } else {
                     //     alert("Key hien tai da het hoac co loi ve duong truyen mang")
                     //     break;
@@ -1193,13 +903,13 @@ const LayUrlNew = () => {
                 }
 
             }
+            return;
             setTimeout(() => {
                 for (const id_key of data_key_checked) {
                     if (id_key) {
-                        ajaxCallGet(`update-vi-tri/${id_key}`).then(rs => {
+                        UpdateViTri(id_key).then(rs => {
                             console.log("update vi tri thanh cong " + id_key);
                         })
-                            .catch(err => console.log(err))
                     }
                 }
                 $('.spin-get-url').addClass('d-none')

@@ -19,8 +19,8 @@ import XoaKeyGg from '../../layouts/PageKeyGoogle/XoaKeyGg'
 const PageQlKeyGoogle = () => {
     const dispatch = useDispatch();
 
-    const handleGetAllKeyGg = () => {
-        getAllKeyGg().then(arr => {
+    const handleGetAllKeyGg = async () => {
+        await getAllKeyGg().then(arr => {
             dispatch(changeDataKeyGoogle([...arr]))
         })
     }
@@ -36,34 +36,29 @@ const PageQlKeyGoogle = () => {
                     className='row px-4 d-flex align-items-center justify-content-between position-sticky'
                     style={{ top: '0', padding: '10px', background: '#fff' }}
                 >
-                    <div className='col-8'>
+                    <div className='col-7'>
                         <span className='fs-7 fw-bolder'>Danh sách Key google: </span>
                         <a href='#' className='mr-2'>
 
                         </a>
                     </div>
-                    <div className='col-4 d-flex flex-row justify-content-end'>
+                    <div className='col-5 d-flex flex-row justify-content-end'>
                         <div className='col-4 delete'>
                             <ThemKeyGgExcel handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-3 delete'>
                             <ModalAddKeyGoogle handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-5 delete'>
                             <TestKeyGg handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-3 delete'>
                             <XoaKeyGg handleGetAllKeyGg={handleGetAllKeyGg} />
                         </div>
                     </div>
                 </div>
                 <div className='p-3 table-responsive'>
                     <DanhSachKeyGg />
-                    <ul className='d-flex justify-content-center align-items-center' style={{ marginTop: '16px', padding: 0 }}>
-                        <li className='d-flex align-items-center me-3 box-note'><span className='box-color box-running'></span>Đang cào</li>
-                        <li className='d-flex align-items-center me-3 box-note'><span className='box-color box-finish'></span>Đã cào</li>
-                        <li className='d-flex align-items-center me-3 box-note'><span className='box-color box-choosing'></span>Đang chọn</li>
-                    </ul>
                 </div>
             </div>
         </div>

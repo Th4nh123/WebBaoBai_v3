@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ajaxCallPost } from '../libs/base';
-import { Const_Libs } from '../libs/Const_Libs'
+import { Const_Libs } from '../Toast'
 
 const ModalAddSpinWord = (props) => {
     const { handleGetSpinByIdCam } = props;

@@ -38,8 +38,8 @@ const XoaBlackList = (props) => {
     })
   }
 
-  const deleteAllBlackKeyByCheckBox = () => {
-    DeleteAllBlackKey(current_id_cam).then(response => {
+  const deleteAllBlackKeyByCheckBox = async () => {
+    await DeleteAllBlackKey(current_id_cam).then(response => {
       $('#checkbox-all-black').prop('checked', false);
       $('input[name="checkbox-black-key"]').prop('checked', false)
       $('.btn-delete-all-bl').addClass('d-none')

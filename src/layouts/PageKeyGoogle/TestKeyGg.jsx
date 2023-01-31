@@ -1,37 +1,67 @@
 import React from 'react'
+
 import $ from "jquery";
+
 import { useSelector } from 'react-redux';
+
 import { getUrlByGoogle } from "../../component/AjaxGet";
+
 import { UpdateCountKeyGoogle } from "../../component/AjaxPost/KeyGoogle";
+
 const TestKeyGg = (props) => {
 
     const { handleGetAllKeyGg } = props
+
     const data_key_google = useSelector(state => state.base.data_key_google)
 
     const handleTestKeyGoogle = async () => {
         if (data_key_google.length > 0) {
-            data_key_google.map(async item => {
-                await getUrlByGoogle(1, 1, item.key_api, 'xây dựng là gì?').then(async (response) => {
-                    if (response.status === 200) {
-                        $(`.google-item-${item._id}`).css("background-color", "green");
-                    } else if (response.status === 429) {
-                        $(`.google-item-${item._id}`).css("background-color", "orange");
-                    }
-                    else {
-                        $(`.google-item-${item._id}`).css("background-color", "red");
-                    }
-                    await UpdateCountKeyGoogle(item._id);
+            await data_key_google.map(async (item, index) => {
+                await handleGetAllKeyGg();
+                $('.start-test-gg').addClass('d-none')
+                $('.stop-test-gg').removeClass('d-none')
+                let response = getUrlByGoogle(1, 1, item.key_api, 'xây dựng là gì?',null)
+                // console.log(response);
+                // console.log(response.data);
+                // console.log(response.data.items);
+                // response.data.items.map(value => {
+                //     console.log(value.snippet?.description ? value.snippet.description : 'Khong co description');
+                //     console.log(value.snippet?.title ? value.snippet.title : '');
+                // })
+                // console.log([...response.data.items]);
+                // console.log(data);
+                if (response.status === 200) {
+                    $(`.google-item-${item._id}`).css("background-color", "green").css("color", "white");
+                    await UpdateCountKeyGoogle(item._id).then(response => {
+                        console.log(response.message);
+                    })
+                } else if (response.status === 429) {
+                    $(`.google-item-${item._id}`).css("background-color", "orange").css("color", "white");
+                } else {
+                    $(`.google-item-${item._id}`).css("background-color", "red").css("color", "white");
+                }
+                if (data_key_google.length - 1 === index) {
                     await handleGetAllKeyGg();
-                })
+                }
             })
         }
-        // handleGetAllKeyGg()
+    }
+
+    const handleStopTestKeyGoogle = () => {
+        $(`.google-item`).css("background-color", "rgba(0, 0, 0, 0)").css("color", "black");
+        $('.start-test-gg').removeClass('d-none')
+        $('.stop-test-gg').addClass('d-none')
     }
 
     return (
-        <button type="button" className="btn btn-primary fw-bolder" style={{ fontSize: '14px' }} onClick={() => handleTestKeyGoogle()}>
-            Test Key
-        </button>
+        <>
+            <button type="button" className="start-test-gg btn btn-primary fw-bolder" style={{ fontSize: '14px' }} onClick={() => handleTestKeyGoogle()}>
+                Test Key
+            </button>
+            <button type="button" className="stop-test-gg btn btn-primary fw-bolder d-none" style={{ fontSize: '14px' }} onClick={() => handleStopTestKeyGoogle()}>
+                Dừng test Key
+            </button>
+        </>
     )
 }
 

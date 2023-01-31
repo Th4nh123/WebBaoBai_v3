@@ -2,7 +2,9 @@ import React from 'react'
 import $ from 'jquery'
 import { useDispatch, useSelector } from 'react-redux'
 import { ajaxCallGet } from '../../component/libs/base'
-import { Const_Libs } from '../../component/libs/Const_Libs'
+import { getKey ,getKeyByIdCam,getUrlByIdKey} from '../../component/AjaxGet'
+import { resetKey} from '../../component/AjaxPost/Key'
+import { Const_Libs } from '../../component/Toast'
 import { changeCurrentIdKey, changeDataKey, changeDataUrl } from '../../component/reducer_action/BaseReducerAction'
 
 const XoaUrl = () => {
@@ -14,7 +16,7 @@ const XoaUrl = () => {
 
 
     const handleGetKeyByIdCam = (id) => {
-        ajaxCallGet(`get-key-by-id-cam/` + id).then(rs => {
+        getKeyByIdCam(id).then(rs => {
             $('.box-note-default').addClass('d-flex');
             $('.box-note-default').removeClass('d-none');
             $('.box-note-all').addClass('d-none');
@@ -25,7 +27,7 @@ const XoaUrl = () => {
     }
 
     const handleGetKey = () => {
-        ajaxCallGet('get-key').then(rs => {
+        getKey().then(rs => {
             dispatch(changeDataKey([...rs]))
         })
         // .catch(err => console.log(err))
@@ -34,12 +36,12 @@ const XoaUrl = () => {
 
     const handleResetKey = idKey => {
         if (data_current_id_cam) {
-            ajaxCallGet('reset-key/' + idKey).then(rs => {
+            resetKey(idKey).then(rs => {
                 handleGetKeyByIdCam(data_current_id_cam)
             })
             // .catch(err => console.log(err))
         } else {
-            ajaxCallGet('reset-key/' + idKey).then(rs => {
+            resetKey(idKey).then(rs => {
                 handleGetKey()
             })
             // .catch(err => console.log(err))
@@ -51,7 +53,7 @@ const XoaUrl = () => {
         let key = dataKey.filter(item => item.id === id_key)
         // set_current_key_ref(key[0])
         dispatch(changeCurrentIdKey(id_key))
-        return await ajaxCallGet('get-url-by-id-key/' + id_key).then(rs => {
+        return await getUrlByIdKey(id_key).then(rs => {
             for (let i = 0; i < rs.length; i++) {
                 rs[i].state = 'create'
             }
