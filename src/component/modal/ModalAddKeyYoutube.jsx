@@ -1,6 +1,11 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
+
+import $ from 'jquery'
+
+import { useSelector } from 'react-redux';
+
 import { SaveKeyYoutube } from '../AjaxPost/KeyYoutube';
+
 import { Const_Libs } from '../Toast';
 
 const ModalAddKeyYoutube = (props) => {
@@ -11,7 +16,15 @@ const ModalAddKeyYoutube = (props) => {
 
     const { handleGetAllKeyYt } = props;
 
+    const data_key_youtube = useSelector(state => state.base.data_key_youtube)
+
     const handleSubmit = () => {
+        if (data_key_youtube.length > 0) {
+            if ($(`.youtube-item-${data_key_youtube[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+              Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+              return;
+            }
+          }
         let data = [{
             key_api: keyYoutube.key_api,
             description: keyYoutube.description

@@ -16,6 +16,8 @@ const TestKeyYoutube = (props) => {
 
     const handleTestKeyYoutube = async () => {
         if (data_key_youtube.length > 0) {
+            $('.start-test-yt').addClass('d-none')
+            $('.stop-test-yt').removeClass('d-none')
             await data_key_youtube.map(async (item, index) => {
                 await handleGetAllKeyYt();
                 let response = getUrlByYoutube(10, item.key_api, 'xây dựng là gì?')
@@ -36,10 +38,22 @@ const TestKeyYoutube = (props) => {
         }
     }
 
+    const handleStopTestKeyYoutube = () => {
+        $(`.youtube-item`).css("background-color", "rgba(0, 0, 0, 0)").css("color", "black");
+        $('.start-test-yt').removeClass('d-none')
+        $('.stop-test-yt').addClass('d-none')
+    }
+
+
     return (
-        <button type="button" className="btn btn-primary fw-bolder" style={{ fontSize: '14px' }} onClick={() => handleTestKeyYoutube()}>
-            Test Key
-        </button>
+        <>
+            <button type="button" className="start-test-yt btn btn-primary fw-bolder" style={{ fontSize: '14px' }} onClick={() => handleTestKeyYoutube()}>
+                Test Key
+            </button>
+            <button type="button" className="stop-test-yt btn btn-primary fw-bolder d-none" style={{ fontSize: '14px' }} onClick={() => handleStopTestKeyYoutube()}>
+                Dừng Test Key
+            </button>
+        </>
     )
 }
 

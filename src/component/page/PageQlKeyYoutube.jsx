@@ -37,23 +37,23 @@ const PageQlKeyYoutube = () => {
                     className='row px-4 d-flex align-items-center justify-content-between position-sticky'
                     style={{ top: '0', padding: '10px', background: '#fff' }}
                 >
-                    <div className='col-8'>
+                    <div className='col-7'>
                         <span className='fs-7 fw-bolder'>Danh sách Key youtube: </span>
                         <a href='#' className='mr-2'>
 
                         </a>
                     </div>
-                    <div className='col-4 d-flex flex-row justify-content-end'>
+                    <div className='col-5 d-flex flex-row justify-content-end'>
                         <div className='col-4 delete'>
                             <ThemKeyYtExcel handleGetAllKeyYt={handleGetAllKeyYt} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-3 delete'>
                             <ModalAddKeyYoutube handleGetAllKeyYt={handleGetAllKeyYt} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-5 delete'>
                             <TestKeyYoutube handleGetAllKeyYt={handleGetAllKeyYt} />
                         </div>
-                        <div className='col-4 delete'>
+                        <div className='col-3 delete'>
                             <XoaKeyYt handleGetAllKeyYt={handleGetAllKeyYt} />
                         </div>
                     </div>

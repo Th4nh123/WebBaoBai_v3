@@ -16,20 +16,11 @@ const TestKeyGg = (props) => {
 
     const handleTestKeyGoogle = async () => {
         if (data_key_google.length > 0) {
+            $('.start-test-gg').addClass('d-none')
+            $('.stop-test-gg').removeClass('d-none')
             await data_key_google.map(async (item, index) => {
                 await handleGetAllKeyGg();
-                $('.start-test-gg').addClass('d-none')
-                $('.stop-test-gg').removeClass('d-none')
                 let response = getUrlByGoogle(1, 1, item.key_api, 'xây dựng là gì?',null)
-                // console.log(response);
-                // console.log(response.data);
-                // console.log(response.data.items);
-                // response.data.items.map(value => {
-                //     console.log(value.snippet?.description ? value.snippet.description : 'Khong co description');
-                //     console.log(value.snippet?.title ? value.snippet.title : '');
-                // })
-                // console.log([...response.data.items]);
-                // console.log(data);
                 if (response.status === 200) {
                     $(`.google-item-${item._id}`).css("background-color", "green").css("color", "white");
                     await UpdateCountKeyGoogle(item._id).then(response => {

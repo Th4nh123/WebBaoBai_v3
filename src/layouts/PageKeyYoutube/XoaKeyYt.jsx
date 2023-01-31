@@ -1,11 +1,26 @@
 import React from 'react'
+
 import $ from 'jquery'
-import { deleteKeyYt,deleteAllKeyYt  } from '../../component/AjaxPost/KeyYoutube';
+
+import { useSelector } from 'react-redux';
+
+import { deleteKeyYt, deleteAllKeyYt } from '../../component/AjaxPost/KeyYoutube';
+
 import { Const_Libs } from '../../component/Toast';
 
 const XoaKeyYt = (props) => {
+
   const { handleGetAllKeyYt } = props;
+
+  const data_key_youtube = useSelector(state => state.base.data_key_youtube)
+
   const deleteKeyYtByCheckBox = async () => {
+    if (data_key_youtube.length > 0) {
+      if ($(`.youtube-item-${data_key_youtube[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+        Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+        return;
+      }
+    }
     let arr = []
     for (let checkbox of document.querySelectorAll('input[name="checkbox-key-youtube"]')) {
       if (checkbox.checked) {
@@ -27,6 +42,12 @@ const XoaKeyYt = (props) => {
   }
 
   const deleteAllKeyYtByCheckBox = async () => {
+    if (data_key_youtube.length > 0) {
+      if ($(`.youtube-item-${data_key_youtube[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+        Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+        return;
+      }
+    }
     await deleteAllKeyYt().then(response => {
       $('#check-all-key-yt').prop('checked', false);
       $('input[name="checkbox-key-google"]').prop('checked', false)

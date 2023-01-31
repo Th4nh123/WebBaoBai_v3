@@ -1,14 +1,31 @@
 import React, { useState } from 'react'
+
+import $ from 'jquery'
+
+import { useSelector } from 'react-redux';
+
 import { ExcelRenderer } from 'react-excel-renderer'
+
 import { Const_Libs } from '../../component/Toast'
+
 import { SaveKeyYoutube } from '../../component/AjaxPost/KeyYoutube'
 
 
 const ThemKeyYtExcel = (props) => {
+
     const { handleGetAllKeyYt } = props;
+    
     const [isUploading, setUploading] = useState(false);
 
+    const data_key_youtube = useSelector(state => state.base.data_key_youtube)
+
     const fileYtHandler = event => {
+        if (data_key_youtube.length > 0) {
+            if ($(`.youtube-item-${data_key_youtube[0]._id}`).css("background-color") !== "rgba(0, 0, 0, 0)") {
+                Const_Libs.TOAST.error("Hãy dừng test key trước khi thực hiện thao tác")
+                return;
+            }
+        }
         let fileObj = event.target.files[0]
         setUploading(true);
 
